@@ -1,0 +1,6 @@
+00_bibliografia/
+00_Bibliografía/
+01_Consigna/
+.venv/
+__pycache__/
+streamlit.*.log
