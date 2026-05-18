@@ -65,7 +65,7 @@ def inject_css() -> None:
         }
 
         .block-container {
-            padding-top: 1.2rem;
+            padding-top: 2rem;
             padding-bottom: 1.25rem;
             padding-left: 1.4rem;
             padding-right: 1.4rem;
@@ -119,10 +119,6 @@ def inject_css() -> None:
             margin-bottom: .45rem;
         }
 
-        [data-testid="stVerticalBlock"] {
-            gap: .45rem;
-        }
-
         [data-testid="stHorizontalBlock"] {
             gap: .75rem;
         }
@@ -131,20 +127,30 @@ def inject_css() -> None:
             overflow: visible !important;
         }
 
+        .page-header {
+            display: block;
+            padding-top: 1rem;
+            padding-bottom: .65rem;
+            margin-bottom: .35rem;
+            min-height: 78px;
+            overflow: visible !important;
+        }
+
         .page-title {
             color: var(--ink);
             font-size: 2rem;
             font-weight: 850;
-            line-height: 1.32;
-            padding-top: .45rem;
-            margin: 0 0 .4rem;
-            overflow: visible;
+            line-height: 1.25;
+            padding-top: 0;
+            margin: 0 0 .55rem;
+            overflow: visible !important;
+            white-space: normal;
         }
 
         .page-subtitle {
             color: var(--muted);
             font-size: .82rem;
-            margin: 0 0 1rem;
+            margin: 0;
         }
 
         .stMultiSelect [data-baseweb="select"] {
@@ -481,6 +487,12 @@ def inject_css() -> None:
             margin-bottom: .7rem;
         }
 
+        .mini-card,
+        .control-detail,
+        .sidebar-card {
+            box-sizing: border-box;
+        }
+
         .control-detail b {
             font-size: .9rem;
         }
@@ -652,8 +664,10 @@ def control_details(selected: list[str]) -> None:
 def phase_header(phase: str, title: str, subtitle: str) -> None:
     st.markdown(
         f"""
-        <div class="page-title">{title}</div>
-        <div class="page-subtitle">{subtitle}</div>
+        <div class="page-header">
+            <div class="page-title">{title}</div>
+            <div class="page-subtitle">{subtitle}</div>
+        </div>
         """,
         unsafe_allow_html=True,
     )
