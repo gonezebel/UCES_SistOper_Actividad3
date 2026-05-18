@@ -103,8 +103,9 @@ def inject_css() -> None:
         h1 {
             font-size: 2rem !important;
             margin-bottom: .35rem !important;
-            line-height: 1.22 !important;
-            padding-top: .15rem;
+            line-height: 1.32 !important;
+            padding-top: .35rem;
+            overflow: visible !important;
         }
 
         h2 {
@@ -124,6 +125,26 @@ def inject_css() -> None:
 
         [data-testid="stHorizontalBlock"] {
             gap: .75rem;
+        }
+
+        [data-testid="stHeading"] {
+            overflow: visible !important;
+        }
+
+        .page-title {
+            color: var(--ink);
+            font-size: 2rem;
+            font-weight: 850;
+            line-height: 1.32;
+            padding-top: .45rem;
+            margin: 0 0 .4rem;
+            overflow: visible;
+        }
+
+        .page-subtitle {
+            color: var(--muted);
+            font-size: .82rem;
+            margin: 0 0 1rem;
         }
 
         .stMultiSelect [data-baseweb="select"] {
@@ -254,15 +275,15 @@ def inject_css() -> None:
         .mini-grid {
             display: grid;
             grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: .65rem;
-            margin: .55rem 0 .7rem;
+            gap: .7rem;
+            margin: .7rem 0 .75rem;
         }
 
         .stack-cards {
             display: flex;
             flex-direction: column;
-            gap: .55rem;
-            margin-top: .55rem;
+            gap: .7rem;
+            margin-top: .7rem;
         }
 
         .icon-strip {
@@ -409,6 +430,7 @@ def inject_css() -> None:
             color: var(--ink);
             font-weight: 600;
             margin-top: .55rem;
+            margin-bottom: .7rem;
         }
 
         .security-scale {
@@ -456,7 +478,7 @@ def inject_css() -> None:
             background: #fff;
             border-radius: 8px;
             padding: .55rem .65rem;
-            margin-bottom: .52rem;
+            margin-bottom: .7rem;
         }
 
         .control-detail b {
@@ -628,8 +650,13 @@ def control_details(selected: list[str]) -> None:
 
 
 def phase_header(phase: str, title: str, subtitle: str) -> None:
-    st.header(title)
-    st.caption(subtitle)
+    st.markdown(
+        f"""
+        <div class="page-title">{title}</div>
+        <div class="page-subtitle">{subtitle}</div>
+        """,
+        unsafe_allow_html=True,
+    )
 
 
 def rr_schedule(processes: list[Process], quantum: int) -> tuple[list[tuple[str, int, int]], dict[str, int]]:
