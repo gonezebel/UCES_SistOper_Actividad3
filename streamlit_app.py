@@ -84,9 +84,10 @@ def inject_css() -> None:
             max-width: 330px !important;
             width: 330px !important;
             overflow-x: hidden;
-            padding-top: .2rem;
-            padding-left: .75rem;
-            padding-right: .75rem;
+            overflow-y: hidden;
+            padding-top: 0;
+            padding-left: .72rem;
+            padding-right: 1.05rem;
         }
 
         [data-testid="stSidebarResizer"],
@@ -176,18 +177,18 @@ def inject_css() -> None:
             display: flex;
             align-items: center;
             gap: .5rem;
-            margin-bottom: .2rem;
+            margin-bottom: .05rem;
             color: var(--uces-dark);
             font-weight: 850;
             text-transform: uppercase;
             letter-spacing: .02em;
-            font-size: .9rem;
+            font-size: .84rem;
         }
 
         .brand-mark {
-            width: 38px;
-            min-width: 38px;
-            height: 38px;
+            width: 34px;
+            min-width: 34px;
+            height: 34px;
             border-radius: 6px;
             background: var(--uces-green);
             color: #fff;
@@ -195,7 +196,7 @@ def inject_css() -> None:
             align-items: center;
             justify-content: center;
             font-weight: 850;
-            font-size: .76rem;
+            font-size: .68rem;
             line-height: 1;
             overflow: visible;
         }
@@ -614,15 +615,16 @@ def inject_css() -> None:
         .sidebar-card {
             border: 1px solid var(--line);
             border-radius: 8px;
-            padding: .46rem .58rem;
+            padding: .36rem .52rem;
             background: #ffffff;
-            margin-bottom: .38rem;
+            margin-bottom: .3rem;
+            width: calc(100% - .12rem);
         }
 
         .sidebar-card small {
             display: block;
             color: var(--uces-dark);
-            font-size: .66rem;
+            font-size: .62rem;
             font-weight: 800;
             text-transform: uppercase;
         }
@@ -631,8 +633,9 @@ def inject_css() -> None:
             display: block;
             color: var(--ink);
             font-weight: 650;
-            font-size: .8rem;
-            margin-top: .08rem;
+            font-size: .74rem;
+            line-height: 1.25;
+            margin-top: .04rem;
         }
 
         .nav-title {
@@ -644,18 +647,18 @@ def inject_css() -> None:
         }
 
         [data-testid="stSidebar"] [data-testid="stRadio"] {
-            margin-top: .15rem;
-            margin-bottom: .55rem;
+            margin-top: .05rem;
+            margin-bottom: .35rem;
         }
 
         [data-testid="stSidebar"] [data-testid="stRadio"] label {
-            min-height: 1.45rem;
-            padding-top: .05rem;
-            padding-bottom: .05rem;
+            min-height: 1.22rem;
+            padding-top: 0;
+            padding-bottom: 0;
         }
 
         [data-testid="stSidebar"] hr {
-            margin: .55rem 0 .65rem;
+            margin: .35rem 0 .45rem;
         }
 
         .apa-list {
