@@ -900,6 +900,57 @@ def paging_director_cards(page_size: int, process_size: int, frames_needed: int,
     )
 
 
+def usd_range(hours: float) -> str:
+    low = round(hours * 30)
+    high = round(hours * 50)
+    if low == 0:
+        return "USD 0"
+    return f"USD {low}-{high}"
+
+
+def selection_cost_cards(selected: list[str]) -> str:
+    effort_hours = {
+        "Usuarios estándar": 0.5,
+        "UAC activo": 0.25,
+        "BitLocker": 0.75,
+        "Defender + Firewall": 0.5,
+        "Políticas de grupo": 1.5,
+        "Imagen base": 3.0,
+    }
+    hours = sum(effort_hours[item] for item in selected)
+    base = (
+        "Windows 11 Pro: referencia retail aproximada USD 199.99 por equipo si debe comprarse una licencia nueva; "
+        "USD 0 incremental si el equipo ya lo trae preinstalado. Los controles elegidos no agregan licencias separadas."
+    )
+    implementation = (
+        f"Con {len(selected)} de 6 controles activos, la configuración demanda unas {hours:.1f} h técnicas. "
+        f"Si se terceriza a USD 30-50/h, el rango orientativo es {usd_range(hours)}. "
+        "Es una estimación de implementación, no una cotización de proveedor."
+    )
+    return (
+        mini_card("Costo base estimado (USD)", base)
+        + mini_card("Costo variable por controles", implementation)
+    )
+
+
+def isolation_cost_cards(scenario: str) -> str:
+    risks = {
+        "Render 3D se bloquea": "Sin aislamiento, el costo probable es tiempo de clase perdido por reinicio o recuperación de sesión. Con aislamiento, se cierra el render y el resto del aula sigue trabajando.",
+        "Navegador de examen queda comprometido": "Sin aislamiento, el costo puede escalar a revisión de examen, datos expuestos y soporte urgente. Con aislamiento, se bloquea el acceso a otros procesos.",
+        "IDE consume memoria en exceso": "Sin aislamiento, el costo aparece como soporte técnico y demora para recuperar la terminal. Con aislamiento, el incidente se limita al proceso del IDE.",
+    }
+    base = (
+        "Licencias adicionales: USD 0, porque el aislamiento de procesos y memoria virtual ya viene integrado en sistemas modernos. "
+        "La inversión real es validar la imagen, políticas y pruebas básicas: 1-2 h técnicas, estimadas en USD 30-100 si se terceriza."
+    )
+    return (
+        '<div class="mini-grid">'
+        + mini_card("Costo base estimado (USD)", base)
+        + mini_card("Costo evitado por escenario", risks[scenario])
+        + "</div>"
+    )
+
+
 def phase_header(phase: str, title: str, subtitle: str) -> None:
     st.markdown(
         f"""
@@ -983,6 +1034,16 @@ def selection_security_view() -> None:
     )
 
     left, right = st.columns([1.05, .95])
+    with right:
+        st.subheader("Controles de aula")
+        selected = st.multiselect(
+            "Seleccionar controles activos",
+            ["Usuarios estándar", "UAC activo", "BitLocker", "Defender + Firewall", "Políticas de grupo", "Imagen base"],
+            default=["Usuarios estándar", "UAC activo", "Defender + Firewall", "Políticas de grupo"],
+        )
+        security_bar(len(selected), 6)
+        st.caption(f"{len(selected)} de 6 controles activos. Cada control agrega seguridad, pero también administración y mantenimiento.")
+        control_details(selected)
     with left:
         st.subheader("Criterio ejecutivo")
         decision("Windows 11 Pro como sistema base para estaciones del profesor y alumnos.")
@@ -997,21 +1058,11 @@ def selection_security_view() -> None:
         )
         st.markdown(
             '<div class="stack-cards">'
-            + mini_card("Costo / seguridad / eficiencia", "El costo inicial es moderado; la seguridad sube por cuentas estándar, cifrado y políticas; la eficiencia mejora porque IT puede administrar y restaurar equipos sin rediseñar todo el entorno.")
+            + selection_cost_cards(selected)
             + mini_card("Ejemplo real", "En una clase con Blender, navegadores de examen y proyectores, perder tiempo instalando drivers o resolviendo permisos durante la clase tiene más impacto que el costo de una licencia ya administrable.")
             + "</div>",
             unsafe_allow_html=True,
         )
-    with right:
-        st.subheader("Controles de aula")
-        selected = st.multiselect(
-            "Seleccionar controles activos",
-            ["Usuarios estándar", "UAC activo", "BitLocker", "Defender + Firewall", "Políticas de grupo", "Imagen base"],
-            default=["Usuarios estándar", "UAC activo", "Defender + Firewall", "Políticas de grupo"],
-        )
-        security_bar(len(selected), 6)
-        st.caption(f"{len(selected)} de 6 controles activos. Cada control agrega seguridad, pero también administración y mantenimiento.")
-        control_details(selected)
 
 
 
@@ -1025,7 +1076,7 @@ def process_isolation_view() -> None:
         "Criterio ejecutivo",
         "<b>El aislamiento de procesos convierte errores individuales en fallas contenidas: si una aplicación se bloquea, no arrastra al sistema completo ni compromete datos de otra actividad.</b>",
         "Durante un examen online, un alumno puede tener abierto un IDE o una herramienta de render. Si el render consume memoria o falla, el navegador del examen debe seguir protegido.",
-        "El costo es el overhead normal de memoria virtual y cambios de contexto; la seguridad aumenta por separación de espacios; la eficiencia mejora porque se evitan reinicios y pérdida de tiempo de clase.",
+        "Licencias adicionales: USD 0, porque la separación de procesos ya viene integrada en el sistema operativo y se apoya en hardware estándar. El costo real está en validación, pruebas y soporte inicial.",
     )
 
     st.markdown(
@@ -1043,6 +1094,7 @@ def process_isolation_view() -> None:
         ["Render 3D se bloquea", "Navegador de examen queda comprometido", "IDE consume memoria en exceso"],
         horizontal=True,
     )
+    st.markdown(isolation_cost_cards(scenario), unsafe_allow_html=True)
     isolation_infographic(scenario)
 
 
