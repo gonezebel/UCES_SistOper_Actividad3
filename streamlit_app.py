@@ -951,7 +951,7 @@ def paging_director_cards(page_size: int, process_size: int, frames_needed: int,
 
     return (
         '<div class="mini-grid">'
-        + mini_card("Lectura para Dirección", f"El proceso pide {process_size} MB. El sistema reserva {allocated} MB en {frames_needed} páginas de {page_size} MB.")
+        + mini_card("Asignación de memoria", f"El proceso pide {process_size} MB. El sistema reserva {allocated} MB en {frames_needed} páginas de {page_size} MB.")
         + mini_card("Eficiencia de memoria", waste_reading)
         + mini_card("Tamaño elegido", size_reading)
         + mini_card("Impacto operativo", load_reading)
