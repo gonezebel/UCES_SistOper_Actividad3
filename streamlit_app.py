@@ -157,6 +157,10 @@ def inject_css() -> None:
             min-height: 40px;
         }
 
+        [data-testid="stRadio"] > label {
+            display: none !important;
+        }
+
         .hero {
             border-top: 6px solid var(--uces-green);
             padding: 1.4rem 1.5rem 1.25rem;
@@ -1013,9 +1017,8 @@ def sidebar() -> str:
             """,
             unsafe_allow_html=True,
         )
-        st.markdown('<div class="nav-title">Estructura según consigna</div>', unsafe_allow_html=True)
         section = st.radio(
-            "Recorrido de exposición",
+            "",
             [
                 "Resumen ejecutivo",
                 "Fase 1 / 1. Selección y Seguridad",
