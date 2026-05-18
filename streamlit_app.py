@@ -868,6 +868,38 @@ def isolation_infographic(scenario: str) -> None:
     )
 
 
+def paging_director_cards(page_size: int, process_size: int, frames_needed: int, internal_waste: int) -> str:
+    allocated = frames_needed * page_size
+    waste_pct = 0 if allocated == 0 else round((internal_waste / allocated) * 100, 1)
+    if internal_waste == 0:
+        waste_reading = "La división es exacta: no queda desperdicio interno en el último marco."
+    elif waste_pct <= 12:
+        waste_reading = f"El desperdicio interno es bajo ({internal_waste} MB, {waste_pct}% de lo reservado). Es un costo técnico aceptable."
+    else:
+        waste_reading = f"El desperdicio interno es visible ({internal_waste} MB, {waste_pct}% de lo reservado). Conviene evaluar un tamaño de página menor."
+
+    if page_size <= 2:
+        size_reading = "Páginas chicas reducen desperdicio, pero obligan al SO a administrar más entradas de tabla."
+    elif page_size >= 7:
+        size_reading = "Páginas grandes simplifican la tabla, pero pueden reservar memoria que el proceso no usa."
+    else:
+        size_reading = "El tamaño elegido mantiene un balance razonable entre administración y aprovechamiento de RAM."
+
+    if process_size >= 32:
+        load_reading = "Es una carga pesada: paginar permite ubicarla en marcos dispersos sin exigir un bloque contiguo grande."
+    else:
+        load_reading = "Es una carga moderada: la ventaja principal es mantener orden y aislamiento cuando hay varios procesos juntos."
+
+    return (
+        '<div class="mini-grid">'
+        + mini_card("Lectura para Dirección", f"El proceso pide {process_size} MB. El sistema reserva {allocated} MB en {frames_needed} páginas de {page_size} MB.")
+        + mini_card("Eficiencia de memoria", waste_reading)
+        + mini_card("Tamaño elegido", size_reading)
+        + mini_card("Impacto operativo", load_reading)
+        + "</div>"
+    )
+
+
 def phase_header(phase: str, title: str, subtitle: str) -> None:
     st.markdown(
         f"""
@@ -1022,9 +1054,9 @@ def paging_view() -> None:
     )
     context_card(
         "Criterio ejecutivo",
-        "La paginación se recomienda porque evita depender de bloques contiguos de memoria. El servidor puede cargar partes de procesos en marcos dispersos y sostener varias tareas simultáneas.",
+        "<b>La paginación se recomienda porque evita depender de bloques contiguos de memoria. El servidor puede cargar partes de procesos en marcos dispersos y sostener varias tareas simultáneas.</b>",
         "Si el servidor atiende archivos, aulas virtuales y renderizados, puede tener RAM libre repartida en huecos. Sin paginación, esos huecos pueden no servir; con paginación, se aprovechan.",
-        "El costo es gestionar tablas de páginas y aceptar una pequeña fragmentación interna; la seguridad mejora por separación de páginas; la eficiencia sube al reducir fragmentación externa y fallos de asignación.",
+        "Inversión incremental estimada: USD 0 en licencias adicionales si el hardware y el sistema operativo actual ya soportan memoria virtual. La alternativa de resolverlo solo comprando más RAM/servidor requiere cotización en USD y no elimina por sí sola la fragmentación ni mejora el aislamiento. Por eso el monto exacto no es confiable sin presupuesto de proveedor; lo confiable es comparar costo incremental bajo contra menor riesgo operativo.",
     )
 
     c1, c2 = st.columns([.9, 1.1])
@@ -1052,12 +1084,7 @@ def paging_view() -> None:
         st.caption("Los marcos libres pueden estar dispersos; la paginación los aprovecha igual.")
 
     st.markdown(
-        '<div class="mini-grid">'
-        + mini_card("Problema", "La asignación variable deja huecos que no siempre sirven para nuevos procesos.")
-        + mini_card("Solución", "Páginas y marcos de tamaño fijo evitan buscar un bloque contiguo grande.")
-        + mini_card("Costo aceptado", "Puede quedar fragmentación interna en el último marco.")
-        + mini_card("Beneficio", "Mejor aprovechamiento de RAM y menos fallos por falta de espacio contiguo.")
-        + "</div>",
+        paging_director_cards(page_size, process_size, frames_needed, internal_waste),
         unsafe_allow_html=True,
     )
 
