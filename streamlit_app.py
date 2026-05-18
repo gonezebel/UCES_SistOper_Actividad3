@@ -70,6 +70,27 @@ def inject_css() -> None:
             max-width: 1260px;
         }
 
+        [data-testid="stSidebar"] {
+            min-width: 390px !important;
+            max-width: 390px !important;
+            width: 390px !important;
+        }
+
+        [data-testid="stSidebar"] > div:first-child {
+            min-width: 390px !important;
+            max-width: 390px !important;
+            width: 390px !important;
+            overflow-x: hidden;
+            padding-top: 1.25rem;
+        }
+
+        [data-testid="stSidebarResizer"],
+        [data-testid="stSidebarResizeHandle"],
+        [data-testid="stSidebarCollapseButton"],
+        [data-testid="stSidebar"] [style*="cursor: col-resize"] {
+            display: none !important;
+        }
+
         h1, h2, h3 {
             letter-spacing: 0;
             color: var(--ink);
@@ -88,12 +109,13 @@ def inject_css() -> None:
         .hero:after {
             content: "";
             position: absolute;
-            right: -40px;
-            top: -70px;
-            width: 220px;
-            height: 220px;
-            border: 28px solid rgba(0, 140, 90, .12);
+            right: 18px;
+            top: 18px;
+            width: 118px;
+            height: 118px;
+            border: 20px solid rgba(0, 140, 90, .10);
             border-radius: 50%;
+            pointer-events: none;
         }
 
         .brand-row {
@@ -108,8 +130,9 @@ def inject_css() -> None:
         }
 
         .brand-mark {
-            width: 54px;
-            height: 54px;
+            width: 52px;
+            min-width: 52px;
+            height: 52px;
             border-radius: 6px;
             background: var(--uces-green);
             color: #fff;
@@ -118,6 +141,8 @@ def inject_css() -> None:
             justify-content: center;
             font-weight: 850;
             font-size: 1rem;
+            line-height: 1;
+            overflow: visible;
         }
 
         .hero h1 {
@@ -183,6 +208,35 @@ def inject_css() -> None:
             font-size: .92rem;
             color: var(--muted);
             margin: .5rem 0 0;
+        }
+
+        .context-card {
+            border: 1px solid var(--line);
+            border-left: 5px solid var(--uces-green);
+            border-radius: 8px;
+            background: #fff;
+            padding: 1rem 1.1rem;
+            margin: .75rem 0 1rem;
+        }
+
+        .context-card strong {
+            color: var(--uces-dark);
+            display: block;
+            font-size: .82rem;
+            font-weight: 850;
+            text-transform: uppercase;
+            margin-bottom: .25rem;
+        }
+
+        .context-card p {
+            color: var(--ink);
+            margin: .35rem 0;
+            line-height: 1.45;
+        }
+
+        .context-card em {
+            color: var(--muted);
+            font-style: normal;
         }
 
         .mini-grid {
@@ -338,6 +392,65 @@ def inject_css() -> None:
             margin-top: .8rem;
         }
 
+        .security-scale {
+            margin: .6rem 0 1rem;
+        }
+
+        .security-labels {
+            display: flex;
+            justify-content: space-between;
+            color: var(--muted);
+            font-size: .82rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            margin-bottom: .3rem;
+        }
+
+        .security-track {
+            height: 18px;
+            border-radius: 999px;
+            background: #e8eeeb;
+            border: 1px solid var(--line);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .security-fill {
+            height: 100%;
+            border-radius: 999px;
+            transition: width .25s ease, background .25s ease;
+        }
+
+        .security-marker {
+            position: absolute;
+            top: -3px;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 3px solid #fff;
+            box-shadow: 0 2px 8px rgba(20,33,61,.22);
+            transform: translateX(-50%);
+        }
+
+        .control-detail {
+            border: 1px solid var(--line);
+            background: #fff;
+            border-radius: 8px;
+            padding: .78rem;
+            margin-bottom: .55rem;
+        }
+
+        .control-detail b {
+            color: var(--ink);
+        }
+
+        .control-detail small {
+            color: var(--muted);
+            display: block;
+            line-height: 1.35;
+            margin-top: .2rem;
+        }
+
         .sidebar-card {
             border: 1px solid var(--line);
             border-radius: 8px;
@@ -405,6 +518,20 @@ def mini_card(title: str, body: str) -> str:
     return f'<div class="mini-card"><strong>{title}</strong><p>{body}</p></div>'
 
 
+def context_card(title: str, explanation: str, example: str, balance: str) -> None:
+    st.markdown(
+        f"""
+        <div class="context-card">
+            <strong>{title}</strong>
+            <p>{explanation}</p>
+            <p><em>Ejemplo real:</em> {example}</p>
+            <p><em>Costo / seguridad / eficiencia:</em> {balance}</p>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+
 def icon_step(number: str, title: str, body: str) -> str:
     return (
         '<div class="icon-step">'
@@ -425,6 +552,55 @@ def pipeline(nodes: list[tuple[str, str]]) -> None:
 
 def decision(text: str) -> None:
     st.markdown(f'<div class="decision">{text}</div>', unsafe_allow_html=True)
+
+
+def security_bar(active_count: int, total: int) -> None:
+    ratio = active_count / total if total else 0
+    percent = int(ratio * 100)
+    if ratio < 0.34:
+        marker_color = "#e06a5f"
+        level = "Riesgo alto"
+    elif ratio < 0.67:
+        marker_color = "#f6c343"
+        level = "Riesgo medio"
+    else:
+        marker_color = "#008c5a"
+        level = "Riesgo bajo"
+
+    st.markdown(
+        f"""
+            <div class="security-scale">
+                <div class="security-labels"><span>Inseguro</span><span>{level}</span><span>Seguro</span></div>
+                <div class="security-track">
+                <div class="security-fill" style="width:{percent}%; background:{marker_color};"></div>
+                <div class="security-marker" style="left:{percent}%; background:{marker_color};"></div>
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+
+def control_details(selected: list[str]) -> None:
+    details = {
+        "Usuarios estándar": "Los alumnos pueden usar aplicaciones, pero no instalar software, tocar drivers ni cambiar seguridad del equipo.",
+        "UAC activo": "Cada acción administrativa requiere confirmación elevada; evita que un clic o instalador cambie el sistema sin control.",
+        "BitLocker": "Cifra el disco. Si un equipo se pierde o se retira un disco, los datos académicos no quedan legibles.",
+        "Defender + Firewall": "Reduce malware y conexiones no autorizadas sin comprar una solución adicional para el escenario base.",
+        "Políticas de grupo": "Bloquean paneles, instalaciones, ejecución de herramientas críticas y cambios de configuración del aula.",
+        "Imagen base": "Permite restaurar una terminal a estado conocido si un perfil se degrada o una práctica deja el equipo inconsistente.",
+    }
+    for name, body in details.items():
+        status = "Activo" if name in selected else "Pendiente"
+        st.markdown(
+            f"""
+            <div class="control-detail">
+                <b>{status}: {name}</b>
+                <small>{body}</small>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
 
 
 def phase_header(phase: str, title: str, subtitle: str) -> None:
@@ -503,6 +679,12 @@ def selection_security_view() -> None:
         "1. Selección y Seguridad",
         "Sistema base monousuario de escritorio y controles para impedir cambios administrativos.",
     )
+    context_card(
+        "Criterio ejecutivo",
+        "Se propone Windows 11 Pro porque equilibra adopción rápida, compatibilidad con software de aula y herramientas nativas de administración. La decisión no busca el sistema más barato en abstracto, sino el menor costo operativo para una academia que necesita clases funcionando todos los días.",
+        "En una clase con Blender, navegadores de examen y proyectores, perder tiempo instalando drivers o resolviendo permisos durante la clase tiene más impacto que el costo de una licencia ya administrable.",
+        "El costo inicial es moderado; la seguridad sube por cuentas estándar, cifrado y políticas; la eficiencia mejora porque IT puede administrar y restaurar equipos sin rediseñar todo el entorno.",
+    )
 
     left, right = st.columns([1.05, .95])
     with left:
@@ -524,8 +706,9 @@ def selection_security_view() -> None:
             ["Usuarios estándar", "UAC activo", "BitLocker", "Defender + Firewall", "Políticas de grupo", "Imagen base"],
             default=["Usuarios estándar", "UAC activo", "Defender + Firewall", "Políticas de grupo"],
         )
-        st.progress(min(len(selected) / 6, 1.0), text=f"{len(selected)} de 6 controles activos")
-        st.caption("Lectura ejecutiva: más controles activos significan menos riesgo de cambios no autorizados.")
+        security_bar(len(selected), 6)
+        st.caption(f"{len(selected)} de 6 controles activos. Cada control agrega seguridad, pero también administración y mantenimiento.")
+        control_details(selected)
 
     pipeline(
         [
@@ -537,9 +720,7 @@ def selection_security_view() -> None:
         ]
     )
 
-    decision(
-        "Justificación ante el Directorio: se prioriza Windows 11 Pro porque combina facilidad de uso para alumnos con mecanismos de control administrativo suficientes para un aula compartida."
-    )
+    decision("Resultado operativo: los alumnos trabajan sin privilegios administrativos y el área de IT conserva control del aula.")
 
 
 def process_isolation_view() -> None:
@@ -547,6 +728,12 @@ def process_isolation_view() -> None:
         "Fase 1",
         "2. Aislamiento de Procesos",
         "Cada aplicación debe ejecutar en su propio espacio de memoria virtual protegido.",
+    )
+    context_card(
+        "Criterio ejecutivo",
+        "El aislamiento de procesos convierte errores individuales en fallas contenidas. Para el Directorio, esto significa continuidad: si una aplicación se bloquea, no arrastra al sistema completo ni compromete datos de otra actividad.",
+        "Durante un examen online, un alumno puede tener abierto un IDE o una herramienta de render. Si el render consume memoria o falla, el navegador del examen debe seguir protegido.",
+        "El costo es el overhead normal de memoria virtual y cambios de contexto; la seguridad aumenta por separación de espacios; la eficiencia mejora porque se evitan reinicios y pérdida de tiempo de clase.",
     )
 
     st.markdown(
@@ -595,9 +782,7 @@ def process_isolation_view() -> None:
         ]
     )
 
-    decision(
-        "Justificación ante el Directorio: el aislamiento transforma una falla individual en un incidente controlable, no en una caída general del aula."
-    )
+    decision("Resultado operativo: una aplicación defectuosa se trata como incidente aislado, no como caída general del aula.")
 
 
 def paging_view() -> None:
@@ -605,6 +790,12 @@ def paging_view() -> None:
         "Fase 2",
         "3. Análisis de Deficiencias: Paginación",
         "El servidor presenta fragmentación y bajo aprovechamiento de RAM.",
+    )
+    context_card(
+        "Criterio ejecutivo",
+        "La paginación se recomienda porque evita depender de bloques contiguos de memoria. El servidor puede cargar partes de procesos en marcos dispersos y sostener varias tareas simultáneas.",
+        "Si el servidor atiende archivos, aulas virtuales y renderizados, puede tener RAM libre repartida en huecos. Sin paginación, esos huecos pueden no servir; con paginación, se aprovechan.",
+        "El costo es gestionar tablas de páginas y aceptar una pequeña fragmentación interna; la seguridad mejora por separación de páginas; la eficiencia sube al reducir fragmentación externa y fallos de asignación.",
     )
 
     c1, c2 = st.columns([.9, 1.1])
@@ -641,9 +832,7 @@ def paging_view() -> None:
         unsafe_allow_html=True,
     )
 
-    decision(
-        "Informe al Directorio: implementar paginación reduce la fragmentación externa porque el servidor ya no necesita memoria contigua para cargar cada proceso."
-    )
+    decision("Resultado operativo: el servidor usa mejor la RAM disponible y reduce el riesgo de quedarse sin bloques contiguos útiles.")
 
 
 def mmu_view() -> None:
@@ -651,6 +840,12 @@ def mmu_view() -> None:
         "Fase 2",
         "4. Rol del Hardware: MMU",
         "La Unidad de Gestión de Memoria traduce direcciones virtuales y protege accesos.",
+    )
+    context_card(
+        "Criterio ejecutivo",
+        "La MMU es el componente que vuelve práctica y segura la memoria virtual: traduce direcciones en hardware, verifica permisos y habilita fallos de página controlados por el sistema operativo.",
+        "Cuando un navegador de examen pide leer memoria, la MMU valida si esa dirección pertenece a su proceso. Si una app intenta leer memoria del examen, el acceso se bloquea.",
+        "El costo viene incluido en el hardware moderno; la seguridad aumenta por control de accesos; la eficiencia mejora porque la traducción ocurre en hardware y no por software lento.",
     )
 
     virtual_page = st.number_input("Página virtual solicitada", min_value=0, max_value=7, value=3)
@@ -680,9 +875,7 @@ def mmu_view() -> None:
         ]
     )
 
-    decision(
-        "Justificación ante el Directorio: la MMU hace viable la paginación en tiempo real; sin ella, la protección y la traducción de memoria serían lentas o inseguras."
-    )
+    decision("Resultado operativo: la traducción y protección de memoria ocurren a velocidad de hardware.")
 
 
 def round_robin_view() -> None:
@@ -690,6 +883,12 @@ def round_robin_view() -> None:
         "Enfoque de consultoría",
         "5. Round Robin para clases 3D y exámenes online",
         "Planificación equitativa para que ninguna tarea monopolice la CPU.",
+    )
+    context_card(
+        "Criterio ejecutivo",
+        "Round Robin se defiende porque reparte CPU en turnos. No maximiza cada tarea individual, pero protege la respuesta percibida cuando conviven actividades pesadas e interactivas.",
+        "En una clase, un render 3D puede necesitar mucho CPU. El examen online, el antivirus y el sistema no pueden quedar esperando hasta que termine el render.",
+        "El costo es mayor cantidad de cambios de contexto si el quantum es bajo; la seguridad operativa sube porque servicios críticos siguen respondiendo; la eficiencia del aula mejora porque todos los procesos avanzan.",
     )
 
     quantum = st.slider("Quantum de CPU", min_value=1, max_value=6, value=3)
@@ -724,9 +923,7 @@ def round_robin_view() -> None:
         unsafe_allow_html=True,
     )
 
-    decision(
-        "Defensa ejecutiva: Round Robin es apropiado porque protege la experiencia interactiva del aula frente a procesos intensivos."
-    )
+    decision("Resultado operativo: el render avanza sin bloquear exámenes, navegadores ni servicios del sistema.")
 
 
 def board_view() -> None:
