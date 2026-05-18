@@ -679,16 +679,10 @@ def selection_security_view() -> None:
         "1. Selección y Seguridad",
         "Sistema base monousuario de escritorio y controles para impedir cambios administrativos.",
     )
-    context_card(
-        "Criterio ejecutivo",
-        "Se propone Windows 11 Pro porque equilibra adopción rápida, compatibilidad con software de aula y herramientas nativas de administración. La decisión no busca el sistema más barato en abstracto, sino el menor costo operativo para una academia que necesita clases funcionando todos los días.",
-        "En una clase con Blender, navegadores de examen y proyectores, perder tiempo instalando drivers o resolviendo permisos durante la clase tiene más impacto que el costo de una licencia ya administrable.",
-        "El costo inicial es moderado; la seguridad sube por cuentas estándar, cifrado y políticas; la eficiencia mejora porque IT puede administrar y restaurar equipos sin rediseñar todo el entorno.",
-    )
 
     left, right = st.columns([1.05, .95])
     with left:
-        st.subheader("Decisión defendida")
+        st.subheader("Criterio ejecutivo")
         decision("Windows 11 Pro como sistema base para estaciones del profesor y alumnos.")
         st.markdown(
             '<div class="mini-grid">'
@@ -710,17 +704,13 @@ def selection_security_view() -> None:
         st.caption(f"{len(selected)} de 6 controles activos. Cada control agrega seguridad, pero también administración y mantenimiento.")
         control_details(selected)
 
-    pipeline(
-        [
-            ("Alumno", "Usuario estándar"),
-            ("UAC", "Eleva solo IT"),
-            ("Políticas", "Bloquean cambios"),
-            ("BitLocker", "Protege datos"),
-            ("Defender", "Reduce malware"),
-        ]
+    st.markdown(
+        '<div class="mini-grid">'
+        + mini_card("Ejemplo real", "En una clase con Blender, navegadores de examen y proyectores, perder tiempo instalando drivers o resolviendo permisos durante la clase tiene más impacto que el costo de una licencia ya administrable.")
+        + mini_card("Costo / seguridad / eficiencia", "El costo inicial es moderado; la seguridad sube por cuentas estándar, cifrado y políticas; la eficiencia mejora porque IT puede administrar y restaurar equipos sin rediseñar todo el entorno.")
+        + "</div>",
+        unsafe_allow_html=True,
     )
-
-    decision("Resultado operativo: los alumnos trabajan sin privilegios administrativos y el área de IT conserva control del aula.")
 
 
 def process_isolation_view() -> None:
