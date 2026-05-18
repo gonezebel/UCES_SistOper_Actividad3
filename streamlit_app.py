@@ -987,7 +987,7 @@ def process_isolation_view() -> None:
     )
     context_card(
         "Criterio ejecutivo",
-        "El aislamiento de procesos convierte errores individuales en fallas contenidas. Para el Directorio, esto significa continuidad: si una aplicación se bloquea, no arrastra al sistema completo ni compromete datos de otra actividad.",
+        "<b>El aislamiento de procesos convierte errores individuales en fallas contenidas: si una aplicación se bloquea, no arrastra al sistema completo ni compromete datos de otra actividad.</b>",
         "Durante un examen online, un alumno puede tener abierto un IDE o una herramienta de render. Si el render consume memoria o falla, el navegador del examen debe seguir protegido.",
         "El costo es el overhead normal de memoria virtual y cambios de contexto; la seguridad aumenta por separación de espacios; la eficiencia mejora porque se evitan reinicios y pérdida de tiempo de clase.",
     )
