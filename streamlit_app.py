@@ -416,6 +416,102 @@ def inject_css() -> None:
             color: var(--muted);
         }
 
+        .mmu-infographic {
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            background: #fff;
+            padding: .85rem;
+            margin-top: .65rem;
+        }
+
+        .mmu-flow {
+            display: grid;
+            grid-template-columns: repeat(5, minmax(0, 1fr));
+            gap: .45rem;
+            margin-bottom: .65rem;
+        }
+
+        .mmu-node {
+            position: relative;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: var(--panel);
+            padding: .68rem .62rem;
+            min-height: 104px;
+        }
+
+        .mmu-node:not(:last-child)::after {
+            content: "";
+            position: absolute;
+            right: -.42rem;
+            top: 50%;
+            width: .38rem;
+            height: 2px;
+            background: var(--uces-green);
+        }
+
+        .mmu-step {
+            display: inline-flex;
+            width: 24px;
+            height: 24px;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: var(--uces-light);
+            color: var(--uces-dark);
+            font-size: .72rem;
+            font-weight: 850;
+            margin-bottom: .35rem;
+        }
+
+        .mmu-node strong {
+            display: block;
+            color: var(--ink);
+            font-size: .96rem;
+            margin-bottom: .16rem;
+        }
+
+        .mmu-node span {
+            display: block;
+            color: var(--muted);
+            font-size: .8rem;
+            line-height: 1.28;
+        }
+
+        .mmu-cases {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: .55rem;
+        }
+
+        .mmu-case {
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            padding: .68rem .78rem;
+            background: #fbfffd;
+        }
+
+        .mmu-case.blocked {
+            background: #fffafa;
+            border-color: #f0b9b2;
+        }
+
+        .mmu-case strong {
+            display: block;
+            color: var(--uces-dark);
+            font-size: .78rem;
+            font-weight: 850;
+            text-transform: uppercase;
+            margin-bottom: .24rem;
+        }
+
+        .mmu-case p {
+            margin: 0;
+            color: var(--muted);
+            font-size: .84rem;
+            line-height: 1.35;
+        }
+
         .memory-grid {
             display: grid;
             grid-template-columns: repeat(8, 1fr);
@@ -726,10 +822,10 @@ def inject_css() -> None:
         }
 
         @media (max-width: 900px) {
-            .kpi-grid, .icon-strip, .mini-grid, .pipeline, .isolation-layout {grid-template-columns: 1fr;}
+            .kpi-grid, .icon-strip, .mini-grid, .pipeline, .isolation-layout, .mmu-flow, .mmu-cases {grid-template-columns: 1fr;}
             .memory-grid {grid-template-columns: repeat(4, 1fr);}
             .process-map {grid-template-columns: repeat(2, 1fr);}
-            .pipeline:before, .pipeline:after {display: none;}
+            .pipeline:before, .pipeline:after, .mmu-node:not(:last-child)::after {display: none;}
         }
         </style>
         """,
@@ -1002,6 +1098,53 @@ def isolation_cost_cards(scenario: str) -> str:
     )
 
 
+def mmu_infographic() -> None:
+    st.markdown(
+        """
+        <div class="mmu-infographic">
+            <div class="mmu-flow">
+                <div class="mmu-node">
+                    <div class="mmu-step">1</div>
+                    <strong>Dirección virtual</strong>
+                    <span>El programa pide página 3 + desplazamiento 128. No conoce la ubicación real en RAM.</span>
+                </div>
+                <div class="mmu-node">
+                    <div class="mmu-step">2</div>
+                    <strong>MMU</strong>
+                    <span>El hardware intercepta el pedido antes de que llegue a memoria física.</span>
+                </div>
+                <div class="mmu-node">
+                    <div class="mmu-step">3</div>
+                    <strong>Tabla de páginas</strong>
+                    <span>El sistema indica que la página 3 corresponde al marco físico 2.</span>
+                </div>
+                <div class="mmu-node">
+                    <div class="mmu-step">4</div>
+                    <strong>Permisos</strong>
+                    <span>Se valida si el proceso puede leer o escribir esa región de memoria.</span>
+                </div>
+                <div class="mmu-node">
+                    <div class="mmu-step">5</div>
+                    <strong>RAM o bloqueo</strong>
+                    <span>Si el acceso es válido, llega a la dirección física 8320; si no, se corta.</span>
+                </div>
+            </div>
+            <div class="mmu-cases">
+                <div class="mmu-case">
+                    <strong>Acceso autorizado</strong>
+                    <p>El navegador de examen lee solo sus propios datos. La traducción ocurre en hardware y mantiene el rendimiento del aula.</p>
+                </div>
+                <div class="mmu-case blocked">
+                    <strong>Intento indebido bloqueado</strong>
+                    <p>Si otra aplicación intenta leer memoria del examen, la MMU genera una falla de protección y el sistema operativo detiene ese acceso.</p>
+                </div>
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+
 def phase_header(phase: str, title: str, subtitle: str) -> None:
     st.markdown(
         f"""
@@ -1207,34 +1350,7 @@ def mmu_view() -> None:
         "El costo viene incluido en el hardware moderno; la seguridad aumenta por control de accesos; la eficiencia mejora porque la traducción ocurre en hardware y no por software lento.",
     )
 
-    virtual_page = st.number_input("Página virtual solicitada", min_value=0, max_value=7, value=3)
-    offset = st.number_input("Desplazamiento", min_value=0, max_value=4095, value=128)
-    table = {0: 5, 1: 1, 2: 7, 3: 2, 4: 9, 5: 4, 6: 12, 7: 6}
-    frame = table[int(virtual_page)]
-    physical = frame * 4096 + int(offset)
-
-    st.markdown(
-        '<div class="icon-strip">'
-        + icon_step("CPU", f"Página {virtual_page}", f"Offset {offset}")
-        + icon_step("MMU", "Consulta", "Tabla de páginas")
-        + icon_step("TAB", f"Marco {frame}", "Traducción válida")
-        + icon_step("RAM", f"{physical}", "Dirección física")
-        + icon_step("OK", "Permisos", "Lectura / escritura")
-        + "</div>",
-        unsafe_allow_html=True,
-    )
-
-    pipeline(
-        [
-            ("Dirección virtual", "Programa"),
-            ("MMU", "Hardware"),
-            ("Tabla", "Mapeo"),
-            ("Permisos", "Protección"),
-            ("Dirección física", "RAM"),
-        ]
-    )
-
-    decision("Resultado operativo: la traducción y protección de memoria ocurren a velocidad de hardware.")
+    mmu_infographic()
 
 
 def round_robin_view() -> None:
