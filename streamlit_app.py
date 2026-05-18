@@ -65,23 +65,27 @@ def inject_css() -> None:
         }
 
         .block-container {
-            padding-top: 1.5rem;
-            padding-bottom: 3rem;
-            max-width: 1260px;
+            padding-top: .75rem;
+            padding-bottom: 1.25rem;
+            padding-left: 1.4rem;
+            padding-right: 1.4rem;
+            max-width: 1380px;
         }
 
         [data-testid="stSidebar"] {
-            min-width: 390px !important;
-            max-width: 390px !important;
-            width: 390px !important;
+            min-width: 330px !important;
+            max-width: 330px !important;
+            width: 330px !important;
         }
 
         [data-testid="stSidebar"] > div:first-child {
-            min-width: 390px !important;
-            max-width: 390px !important;
-            width: 390px !important;
+            min-width: 330px !important;
+            max-width: 330px !important;
+            width: 330px !important;
             overflow-x: hidden;
-            padding-top: 1.25rem;
+            padding-top: .75rem;
+            padding-left: .75rem;
+            padding-right: .75rem;
         }
 
         [data-testid="stSidebarResizer"],
@@ -94,6 +98,34 @@ def inject_css() -> None:
         h1, h2, h3 {
             letter-spacing: 0;
             color: var(--ink);
+        }
+
+        h1 {
+            font-size: 2rem !important;
+            margin-bottom: .35rem !important;
+        }
+
+        h2 {
+            font-size: 1.55rem !important;
+            margin-top: .55rem !important;
+            margin-bottom: .45rem !important;
+        }
+
+        [data-testid="stCaptionContainer"] {
+            font-size: .78rem;
+            margin-bottom: .45rem;
+        }
+
+        [data-testid="stVerticalBlock"] {
+            gap: .45rem;
+        }
+
+        [data-testid="stHorizontalBlock"] {
+            gap: .75rem;
+        }
+
+        .stMultiSelect [data-baseweb="select"] {
+            min-height: 40px;
         }
 
         .hero {
@@ -109,18 +141,19 @@ def inject_css() -> None:
         .brand-row {
             display: flex;
             align-items: center;
-            gap: .8rem;
-            margin-bottom: .7rem;
+            gap: .6rem;
+            margin-bottom: .45rem;
             color: var(--uces-dark);
             font-weight: 850;
             text-transform: uppercase;
             letter-spacing: .02em;
+            font-size: .9rem;
         }
 
         .brand-mark {
-            width: 52px;
-            min-width: 52px;
-            height: 52px;
+            width: 44px;
+            min-width: 44px;
+            height: 44px;
             border-radius: 6px;
             background: var(--uces-green);
             color: #fff;
@@ -128,7 +161,7 @@ def inject_css() -> None:
             align-items: center;
             justify-content: center;
             font-weight: 850;
-            font-size: 1rem;
+            font-size: .86rem;
             line-height: 1;
             overflow: visible;
         }
@@ -149,24 +182,24 @@ def inject_css() -> None:
         .kpi-grid {
             display: grid;
             grid-template-columns: repeat(3, minmax(0, 1fr));
-            gap: .75rem;
-            margin: 1rem 0;
+            gap: .55rem;
+            margin: .7rem 0;
         }
 
         .metric-card, .mini-card, .justification-card {
-            padding: 1rem;
+            padding: .72rem .82rem;
             border: 1px solid var(--line);
             border-radius: 8px;
             background: var(--panel);
         }
 
         .metric-card {
-            min-height: 126px;
+            min-height: 104px;
         }
 
         .metric-card strong, .mini-card strong, .justification-card strong {
             display: block;
-            font-size: .78rem;
+            font-size: .72rem;
             color: var(--uces-dark);
             text-transform: uppercase;
             font-weight: 800;
@@ -174,16 +207,17 @@ def inject_css() -> None:
 
         .metric-card span {
             display: block;
-            font-size: 1.55rem;
+            font-size: 1.35rem;
             color: var(--ink);
             font-weight: 850;
             margin-top: .32rem;
         }
 
         .metric-card p, .mini-card p, .justification-card p {
-            font-size: .92rem;
+            font-size: .86rem;
             color: var(--muted);
-            margin: .5rem 0 0;
+            margin: .38rem 0 0;
+            line-height: 1.42;
         }
 
         .context-card {
@@ -218,8 +252,8 @@ def inject_css() -> None:
         .mini-grid {
             display: grid;
             grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: .75rem;
-            margin: .75rem 0 1rem;
+            gap: .55rem;
+            margin: .55rem 0 .7rem;
         }
 
         .icon-strip {
@@ -362,28 +396,28 @@ def inject_css() -> None:
             border-left: 5px solid var(--uces-green);
             background: var(--uces-light);
             border-radius: 8px;
-            padding: 1rem;
+            padding: .78rem .9rem;
             color: var(--ink);
             font-weight: 600;
-            margin-top: .8rem;
+            margin-top: .55rem;
         }
 
         .security-scale {
-            margin: .6rem 0 1rem;
+            margin: .45rem 0 .65rem;
         }
 
         .security-labels {
             display: flex;
             justify-content: space-between;
             color: var(--muted);
-            font-size: .82rem;
+            font-size: .72rem;
             font-weight: 800;
             text-transform: uppercase;
-            margin-bottom: .3rem;
+            margin-bottom: .18rem;
         }
 
         .security-track {
-            height: 18px;
+            height: 15px;
             border-radius: 999px;
             background: #e8eeeb;
             border: 1px solid var(--line);
@@ -399,9 +433,9 @@ def inject_css() -> None:
 
         .security-marker {
             position: absolute;
-            top: -3px;
-            width: 24px;
-            height: 24px;
+            top: -4px;
+            width: 22px;
+            height: 22px;
             border-radius: 50%;
             border: 3px solid #fff;
             box-shadow: 0 2px 8px rgba(20,33,61,.22);
@@ -412,8 +446,12 @@ def inject_css() -> None:
             border: 1px solid var(--line);
             background: #fff;
             border-radius: 8px;
-            padding: .78rem;
-            margin-bottom: .55rem;
+            padding: .55rem .65rem;
+            margin-bottom: .42rem;
+        }
+
+        .control-detail b {
+            font-size: .9rem;
         }
 
         .control-detail b {
@@ -423,22 +461,23 @@ def inject_css() -> None:
         .control-detail small {
             color: var(--muted);
             display: block;
-            line-height: 1.35;
-            margin-top: .2rem;
+            line-height: 1.28;
+            margin-top: .16rem;
+            font-size: .78rem;
         }
 
         .sidebar-card {
             border: 1px solid var(--line);
             border-radius: 8px;
-            padding: .78rem;
+            padding: .55rem .65rem;
             background: #ffffff;
-            margin-bottom: .65rem;
+            margin-bottom: .45rem;
         }
 
         .sidebar-card small {
             display: block;
             color: var(--uces-dark);
-            font-size: .72rem;
+            font-size: .66rem;
             font-weight: 800;
             text-transform: uppercase;
         }
@@ -447,16 +486,16 @@ def inject_css() -> None:
             display: block;
             color: var(--ink);
             font-weight: 650;
-            font-size: .9rem;
-            margin-top: .12rem;
+            font-size: .8rem;
+            margin-top: .08rem;
         }
 
         .nav-title {
             color: var(--uces-dark);
-            font-size: .78rem;
+            font-size: .7rem;
             font-weight: 850;
             text-transform: uppercase;
-            margin: .85rem 0 .25rem;
+            margin: .55rem 0 .18rem;
         }
 
         .apa-list {
