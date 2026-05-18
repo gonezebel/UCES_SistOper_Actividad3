@@ -900,14 +900,6 @@ def paging_director_cards(page_size: int, process_size: int, frames_needed: int,
     )
 
 
-def usd_range(hours: float) -> str:
-    low = round(hours * 30)
-    high = round(hours * 50)
-    if low == 0:
-        return "USD 0"
-    return f"USD {low}-{high}"
-
-
 def selection_cost_cards(selected: list[str]) -> str:
     effort_hours = {
         "Usuarios estándar": 0.5,
@@ -919,17 +911,17 @@ def selection_cost_cards(selected: list[str]) -> str:
     }
     hours = sum(effort_hours[item] for item in selected)
     base = (
-        "Windows 11 Pro: referencia retail aproximada USD 199.99 por equipo si debe comprarse una licencia nueva; "
-        "USD 0 incremental si el equipo ya lo trae preinstalado. Los controles elegidos no agregan licencias separadas."
+        "Windows 11 Pro: referencia retail Microsoft Store USD 199.99 por equipo si debe comprarse licencia nueva. "
+        "macOS no se licencia por separado para equipos Apple compatibles; el costo se traslada al hardware. "
+        "Si las PC ya traen Windows Pro, el costo incremental de software es USD 0."
     )
     implementation = (
-        f"Con {len(selected)} de 6 controles activos, la configuración demanda unas {hours:.1f} h técnicas. "
-        f"Si se terceriza a USD 30-50/h, el rango orientativo es {usd_range(hours)}. "
-        "Es una estimación de implementación, no una cotización de proveedor."
+        f"Con {len(selected)} de 6 controles activos: más {hours:.1f} h técnicas de configuración y validación. "
+        "Ese esfuerzo se informa separado y no se convierte a USD porque depende del esquema operativo contratado."
     )
     return (
         mini_card("Costo base estimado (USD)", base)
-        + mini_card("Costo variable por controles", implementation)
+        + mini_card("Esfuerzo técnico", implementation)
     )
 
 
@@ -941,7 +933,7 @@ def isolation_cost_cards(scenario: str) -> str:
     }
     base = (
         "Licencias adicionales: USD 0, porque el aislamiento de procesos y memoria virtual ya viene integrado en sistemas modernos. "
-        "La inversión real es validar la imagen, políticas y pruebas básicas: 1-2 h técnicas, estimadas en USD 30-100 si se terceriza."
+        "Más 1-2 h técnicas de validación, pruebas básicas y documentación operativa. Ese esfuerzo se muestra aparte y no se convierte a USD."
     )
     return (
         '<div class="mini-grid">'
@@ -1076,7 +1068,7 @@ def process_isolation_view() -> None:
         "Criterio ejecutivo",
         "<b>El aislamiento de procesos convierte errores individuales en fallas contenidas: si una aplicación se bloquea, no arrastra al sistema completo ni compromete datos de otra actividad.</b>",
         "Durante un examen online, un alumno puede tener abierto un IDE o una herramienta de render. Si el render consume memoria o falla, el navegador del examen debe seguir protegido.",
-        "Licencias adicionales: USD 0, porque la separación de procesos ya viene integrada en el sistema operativo y se apoya en hardware estándar. El costo real está en validación, pruebas y soporte inicial.",
+        "Licencias adicionales: USD 0, porque la separación de procesos ya viene integrada en el sistema operativo y se apoya en hardware estándar; más 1-2 h técnicas de validación y prueba.",
     )
 
     st.markdown(
