@@ -660,22 +660,73 @@ def inject_css() -> None:
             padding: .1rem .36rem;
         }
 
-        .gantt {
-            display: flex;
-            overflow-x: auto;
-            gap: 3px;
-            padding: .35rem 0 .8rem;
+        .rr-layout {
+            display: grid;
+            grid-template-columns: minmax(0, 1.35fr) minmax(260px, .65fr);
+            gap: .65rem;
+            margin-top: .55rem;
+            align-items: stretch;
         }
 
-        .slice {
-            min-width: 74px;
-            padding: .58rem .45rem;
-            text-align: center;
-            border-radius: 6px;
-            background: #dcecf5;
-            border: 1px solid #9dc4da;
-            font-size: .9rem;
+        .rr-table-wrap {
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: #fff;
+            padding: .55rem;
+        }
+
+        .rr-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .rr-table th {
+            color: var(--uces-dark);
+            font-size: .68rem;
+            text-transform: uppercase;
+            text-align: left;
+            padding: .22rem .32rem .42rem;
+        }
+
+        .rr-table td {
+            border-top: 1px solid var(--line);
             color: var(--ink);
+            font-size: .82rem;
+            padding: .42rem .32rem;
+            vertical-align: middle;
+        }
+
+        .turn-cell {
+            display: flex;
+            flex-wrap: wrap;
+            gap: .22rem;
+            align-items: center;
+        }
+
+        .turn-chip {
+            display: inline-flex;
+            align-items: center;
+            border: 1px solid #9dc4da;
+            background: #dcecf5;
+            border-radius: 6px;
+            padding: .1rem .32rem;
+            font-size: .72rem;
+            font-weight: 700;
+            color: var(--ink);
+            white-space: nowrap;
+        }
+
+        .turn-count {
+            color: var(--muted);
+            font-size: .72rem;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .rr-note-stack {
+            display: flex;
+            flex-direction: column;
+            gap: .55rem;
         }
 
         .decision {
@@ -816,7 +867,7 @@ def inject_css() -> None:
         }
 
         @media (max-width: 900px) {
-            .kpi-grid, .icon-strip, .mini-grid, .pipeline, .isolation-layout, .mmu-flow, .mmu-cases {grid-template-columns: 1fr;}
+            .kpi-grid, .icon-strip, .mini-grid, .pipeline, .isolation-layout, .mmu-flow, .mmu-cases, .rr-layout {grid-template-columns: 1fr;}
             .memory-grid {grid-template-columns: repeat(4, 1fr);}
             .process-map {grid-template-columns: repeat(2, 1fr);}
             .pipeline:before, .pipeline:after, .mmu-node:not(:last-child)::after {display: none;}
@@ -1179,6 +1230,54 @@ def rr_schedule(processes: list[Process], quantum: int) -> tuple[list[tuple[str,
     return timeline, completion
 
 
+def rr_results_table(processes: list[Process], timeline: list[tuple[str, int, int]], completion: dict[str, int]) -> str:
+    turns_by_process: dict[str, list[tuple[int, int]]] = {p.name: [] for p in processes}
+    for name, start, end in timeline:
+        turns_by_process[name].append((start, end))
+
+    def turn_chips(turns: list[tuple[int, int]]) -> str:
+        ranges = [f"{start}-{end}" for start, end in turns]
+        if len(ranges) > 5:
+            visible = ranges[:3] + ["..."] + [ranges[-1]]
+            count = f'<span class="turn-count">{len(ranges)} turnos</span>'
+        else:
+            visible = ranges
+            count = ""
+        chips = "".join(f'<span class="turn-chip">{item}</span>' for item in visible)
+        return f'<div class="turn-cell">{chips}{count}</div>'
+
+    rows = []
+    for process in processes:
+        turnaround = completion[process.name] - process.arrival
+        waiting = turnaround - process.burst
+        rows.append(
+            "<tr>"
+            f"<td><b>{process.name}</b></td>"
+            f"<td>{process.burst}</td>"
+            f"<td>{turn_chips(turns_by_process[process.name])}</td>"
+            f"<td>{completion[process.name]}</td>"
+            f"<td>{waiting}</td>"
+            "</tr>"
+        )
+
+    return (
+        '<div class="rr-table-wrap">'
+        '<table class="rr-table">'
+        "<thead><tr><th>Proceso</th><th>CPU</th><th>Turnos asignados</th><th>Fin</th><th>Espera</th></tr></thead>"
+        f"<tbody>{''.join(rows)}</tbody>"
+        "</table>"
+        "</div>"
+    )
+
+
+def rr_quantum_reading(quantum: int) -> str:
+    if quantum <= 2:
+        return "Quantum bajo: mejora la respuesta de procesos cortos, pero aumenta la cantidad de cambios de turno."
+    if quantum >= 5:
+        return "Quantum alto: reduce cambios de turno, pero los procesos interactivos pueden esperar más antes de responder."
+    return "Quantum equilibrado: reparte CPU sin generar demasiados cambios de turno ni esperas largas."
+
+
 def executive_view() -> None:
     st.markdown(
         """
@@ -1369,22 +1468,14 @@ def round_robin_view() -> None:
         Process("Sistema", p4),
     ]
     timeline, completion = rr_schedule(processes, quantum)
-    slices = "".join([f'<div class="slice"><b>{name}</b><br>{start}-{end}</div>' for name, start, end in timeline])
-    st.markdown(f'<div class="gantt">{slices}</div>', unsafe_allow_html=True)
-
-    rows = []
-    for p in processes:
-        turnaround = completion[p.name] - p.arrival
-        waiting = turnaround - p.burst
-        rows.append({"Proceso": p.name, "CPU requerida": p.burst, "Finaliza en": completion[p.name], "Espera total": waiting})
-    st.dataframe(rows, hide_index=True, use_container_width=True)
-
     st.markdown(
-        '<div class="mini-grid">'
-        + mini_card("Equidad", "Todos los procesos reciben turnos de CPU.")
-        + mini_card("Respuesta", "El examen conserva interacción aunque haya renderizado.")
-        + mini_card("Riesgo", "Quantum demasiado bajo aumenta cambios de contexto.")
-        + mini_card("Criterio", "Ajustar quantum para balancear fluidez y eficiencia.")
+        '<div class="rr-layout">'
+        + rr_results_table(processes, timeline, completion)
+        + '<div class="rr-note-stack">'
+        + mini_card("Cómo leer la tabla", "Cada rango inicio-fin es un turno de CPU. Si un proceso tiene varios rangos, vuelve a la cola porque todavía le falta trabajo.")
+        + mini_card("Lectura del quantum", rr_quantum_reading(quantum))
+        + mini_card("Criterio ejecutivo", "El examen y el sistema reciben turnos aunque el render siga activo; eso protege la percepción de respuesta del aula.")
+        + "</div>"
         + "</div>",
         unsafe_allow_html=True,
     )
