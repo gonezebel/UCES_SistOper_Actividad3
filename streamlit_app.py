@@ -83,7 +83,7 @@ def inject_css() -> None:
             max-width: 330px !important;
             width: 330px !important;
             overflow-x: hidden;
-            padding-top: .75rem;
+            padding-top: .2rem;
             padding-left: .75rem;
             padding-right: .75rem;
         }
@@ -174,8 +174,8 @@ def inject_css() -> None:
         .brand-row {
             display: flex;
             align-items: center;
-            gap: .6rem;
-            margin-bottom: .45rem;
+            gap: .5rem;
+            margin-bottom: .2rem;
             color: var(--uces-dark);
             font-weight: 850;
             text-transform: uppercase;
@@ -184,9 +184,9 @@ def inject_css() -> None:
         }
 
         .brand-mark {
-            width: 44px;
-            min-width: 44px;
-            height: 44px;
+            width: 38px;
+            min-width: 38px;
+            height: 38px;
             border-radius: 6px;
             background: var(--uces-green);
             color: #fff;
@@ -194,7 +194,7 @@ def inject_css() -> None:
             align-items: center;
             justify-content: center;
             font-weight: 850;
-            font-size: .86rem;
+            font-size: .76rem;
             line-height: 1;
             overflow: visible;
         }
@@ -613,9 +613,9 @@ def inject_css() -> None:
         .sidebar-card {
             border: 1px solid var(--line);
             border-radius: 8px;
-            padding: .55rem .65rem;
+            padding: .46rem .58rem;
             background: #ffffff;
-            margin-bottom: .55rem;
+            margin-bottom: .38rem;
         }
 
         .sidebar-card small {
@@ -640,6 +640,21 @@ def inject_css() -> None:
             font-weight: 850;
             text-transform: uppercase;
             margin: .55rem 0 .18rem;
+        }
+
+        [data-testid="stSidebar"] [data-testid="stRadio"] {
+            margin-top: .15rem;
+            margin-bottom: .55rem;
+        }
+
+        [data-testid="stSidebar"] [data-testid="stRadio"] label {
+            min-height: 1.45rem;
+            padding-top: .05rem;
+            padding-bottom: .05rem;
+        }
+
+        [data-testid="stSidebar"] hr {
+            margin: .55rem 0 .65rem;
         }
 
         .apa-list {
