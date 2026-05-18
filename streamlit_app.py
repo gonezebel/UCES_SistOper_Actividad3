@@ -131,10 +131,10 @@ def inject_css() -> None:
 
         .page-header {
             display: block;
-            padding-top: 1rem;
-            padding-bottom: .65rem;
-            margin-bottom: .35rem;
-            min-height: 78px;
+            padding-top: .85rem;
+            padding-bottom: .25rem;
+            margin-bottom: .2rem;
+            min-height: 48px;
             overflow: visible !important;
         }
 
@@ -144,15 +144,9 @@ def inject_css() -> None:
             font-weight: 850;
             line-height: 1.25;
             padding-top: 0;
-            margin: 0 0 .55rem;
+            margin: 0;
             overflow: visible !important;
             white-space: normal;
-        }
-
-        .page-subtitle {
-            color: var(--muted);
-            font-size: .82rem;
-            margin: 0;
         }
 
         .stMultiSelect [data-baseweb="select"] {
@@ -1145,12 +1139,11 @@ def mmu_infographic() -> None:
     )
 
 
-def phase_header(phase: str, title: str, subtitle: str) -> None:
+def phase_header(phase: str, title: str) -> None:
     st.markdown(
         f"""
         <div class="page-header">
             <div class="page-title">{title}</div>
-            <div class="page-subtitle">{subtitle}</div>
         </div>
         """,
         unsafe_allow_html=True,
@@ -1224,7 +1217,6 @@ def selection_security_view() -> None:
     phase_header(
         "Fase 1",
         "1. Selección y Seguridad",
-        "Sistema base monousuario de escritorio y controles para impedir cambios administrativos.",
     )
 
     left, right = st.columns([1.05, .95])
@@ -1264,7 +1256,6 @@ def process_isolation_view() -> None:
     phase_header(
         "Fase 1",
         "2. Aislamiento de Procesos",
-        "Cada aplicación debe ejecutar en su propio espacio de memoria virtual protegido.",
     )
     context_card(
         "Criterio ejecutivo",
@@ -1297,7 +1288,6 @@ def paging_view() -> None:
     phase_header(
         "Fase 2",
         "3. Análisis de Deficiencias: Paginación",
-        "El servidor presenta fragmentación y bajo aprovechamiento de RAM.",
     )
     context_card(
         "Criterio ejecutivo",
@@ -1341,7 +1331,6 @@ def mmu_view() -> None:
     phase_header(
         "Fase 2",
         "4. Rol del Hardware: MMU",
-        "La Unidad de Gestión de Memoria traduce direcciones virtuales y protege accesos.",
     )
     context_card(
         "Criterio ejecutivo",
@@ -1357,7 +1346,6 @@ def round_robin_view() -> None:
     phase_header(
         "Enfoque de consultoría",
         "5. Round Robin para clases 3D y exámenes online",
-        "Planificación equitativa para que ninguna tarea monopolice la CPU.",
     )
     context_card(
         "Criterio ejecutivo",
@@ -1406,7 +1394,6 @@ def board_view() -> None:
     phase_header(
         "Cierre",
         "Decisión integrada para el Directorio",
-        "Síntesis técnica presentada como defensa ejecutiva.",
     )
 
     c1, c2, c3 = st.columns(3)
