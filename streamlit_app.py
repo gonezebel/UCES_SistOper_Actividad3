@@ -130,7 +130,19 @@ def inject_css() -> None:
             font-size: 1.05rem;
             color: var(--muted);
             margin: 0;
-            max-width: 790px;
+            max-width: 830px;
+        }
+
+        .phase-label {
+            display: inline-block;
+            background: var(--uces-green);
+            color: #fff;
+            border-radius: 999px;
+            padding: .22rem .75rem;
+            font-size: .76rem;
+            font-weight: 850;
+            text-transform: uppercase;
+            margin-bottom: .45rem;
         }
 
         .kpi-grid {
@@ -140,7 +152,7 @@ def inject_css() -> None:
             margin: 1rem 0;
         }
 
-        .metric-card, .mini-card {
+        .metric-card, .mini-card, .justification-card {
             padding: 1rem;
             border: 1px solid var(--line);
             border-radius: 8px;
@@ -151,7 +163,7 @@ def inject_css() -> None:
             min-height: 126px;
         }
 
-        .metric-card strong, .mini-card strong {
+        .metric-card strong, .mini-card strong, .justification-card strong {
             display: block;
             font-size: .78rem;
             color: var(--uces-dark);
@@ -167,10 +179,17 @@ def inject_css() -> None:
             margin-top: .32rem;
         }
 
-        .metric-card p, .mini-card p {
+        .metric-card p, .mini-card p, .justification-card p {
             font-size: .92rem;
             color: var(--muted);
             margin: .5rem 0 0;
+        }
+
+        .mini-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: .75rem;
+            margin: .75rem 0 1rem;
         }
 
         .icon-strip {
@@ -210,6 +229,61 @@ def inject_css() -> None:
         .icon-step small {
             color: var(--muted);
             font-size: .84rem;
+        }
+
+        .pipeline {
+            position: relative;
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: .55rem;
+            margin: .8rem 0 1rem;
+        }
+
+        .pipeline:before {
+            content: "";
+            position: absolute;
+            left: 8%;
+            right: 8%;
+            top: 28px;
+            height: 3px;
+            background: var(--line);
+        }
+
+        .pipeline:after {
+            content: "";
+            position: absolute;
+            top: 20px;
+            left: 8%;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--uces-green);
+            animation: travel 5s linear infinite;
+        }
+
+        @keyframes travel {
+            0% {left: 8%;}
+            100% {left: 88%;}
+        }
+
+        .pipe-node {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            background: #fff;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            padding: .75rem .45rem;
+            min-height: 86px;
+        }
+
+        .pipe-node b {
+            display: block;
+            color: var(--ink);
+        }
+
+        .pipe-node small {
+            color: var(--muted);
         }
 
         .memory-grid {
@@ -261,6 +335,7 @@ def inject_css() -> None:
             padding: 1rem;
             color: var(--ink);
             font-weight: 600;
+            margin-top: .8rem;
         }
 
         .sidebar-card {
@@ -287,6 +362,14 @@ def inject_css() -> None:
             margin-top: .12rem;
         }
 
+        .nav-title {
+            color: var(--uces-dark);
+            font-size: .78rem;
+            font-weight: 850;
+            text-transform: uppercase;
+            margin: .85rem 0 .25rem;
+        }
+
         .apa-list {
             border-top: 1px solid var(--line);
             padding-top: .5rem;
@@ -295,8 +378,9 @@ def inject_css() -> None:
         }
 
         @media (max-width: 900px) {
-            .kpi-grid, .icon-strip {grid-template-columns: 1fr;}
+            .kpi-grid, .icon-strip, .mini-grid, .pipeline {grid-template-columns: 1fr;}
             .memory-grid {grid-template-columns: repeat(4, 1fr);}
+            .pipeline:before, .pipeline:after {display: none;}
         }
         </style>
         """,
@@ -317,6 +401,10 @@ def card(title: str, value: str, body: str) -> None:
     )
 
 
+def mini_card(title: str, body: str) -> str:
+    return f'<div class="mini-card"><strong>{title}</strong><p>{body}</p></div>'
+
+
 def icon_step(number: str, title: str, body: str) -> str:
     return (
         '<div class="icon-step">'
@@ -327,8 +415,22 @@ def icon_step(number: str, title: str, body: str) -> str:
     )
 
 
+def pipeline(nodes: list[tuple[str, str]]) -> None:
+    html = '<div class="pipeline">'
+    for title, body in nodes:
+        html += f'<div class="pipe-node"><b>{title}</b><small>{body}</small></div>'
+    html += "</div>"
+    st.markdown(html, unsafe_allow_html=True)
+
+
 def decision(text: str) -> None:
     st.markdown(f'<div class="decision">{text}</div>', unsafe_allow_html=True)
+
+
+def phase_header(phase: str, title: str, subtitle: str) -> None:
+    st.markdown(f'<span class="phase-label">{phase}</span>', unsafe_allow_html=True)
+    st.header(title)
+    st.caption(subtitle)
 
 
 def rr_schedule(processes: list[Process], quantum: int) -> tuple[list[tuple[str, int, int]], dict[str, int]]:
@@ -366,63 +468,97 @@ def executive_view() -> None:
         <div class="hero">
             <div class="brand-row"><div class="brand-mark">UCES</div><div>Sistemas Operativos</div></div>
             <h1>Infraestructura académica sin colapsos</h1>
-            <p>Propuesta de IT para una academia tecnológica: estaciones seguras, memoria estable y CPU repartida por prioridad operativa.</p>
+            <p>Propuesta de IT para una academia tecnológica: estaciones seguras, procesos aislados, memoria paginada y CPU repartida de forma equitativa.</p>
         </div>
         """,
         unsafe_allow_html=True,
     )
 
-    st.markdown('<div class="kpi-grid">', unsafe_allow_html=True)
     c1, c2, c3 = st.columns(3)
     with c1:
-        card("Plataforma", "Windows 11 Pro", "Compatibilidad, administración y seguridad nativa.")
+        card("Fase 1", "Windows + control", "Plataforma de escritorio con cuentas sin privilegios y herramientas nativas.")
     with c2:
-        card("Control operativo", "Memoria aislada", "Cada app trabaja en su espacio protegido.")
+        card("Fase 2", "Paginación + MMU", "Memoria en bloques fijos, traducción de direcciones y protección.")
     with c3:
-        card("Continuidad", "Paginación + RR", "RAM aprovechada y CPU por turnos.")
-    st.markdown("</div>", unsafe_allow_html=True)
+        card("Directorio", "Round Robin", "El render 3D no bloquea exámenes ni servicios críticos.")
 
-    st.markdown(
-        '<div class="icon-strip">'
-        + icon_step("01", "Alumno", "Abre IDE, navegador o render 3D.")
-        + icon_step("02", "Proceso", "El SO lo aísla del resto.")
-        + icon_step("03", "MMU", "Traduce direcciones y valida permisos.")
-        + icon_step("04", "RAM", "Páginas en marcos fijos.")
-        + icon_step("05", "CPU", "Round Robin evita monopolios.")
-        + "</div>",
-        unsafe_allow_html=True,
+    pipeline(
+        [
+            ("Alumno", "Aplicación"),
+            ("Proceso", "Aislamiento"),
+            ("MMU", "Traducción"),
+            ("RAM", "Páginas"),
+            ("CPU", "Turnos"),
+        ]
     )
 
     decision(
-        "Recomendación al Directorio: adoptar una base Windows administrada, con cuentas sin privilegios, paginación activa y planificación equitativa para proteger clases, exámenes y trabajos pesados."
+        "Mensaje central: la continuidad académica depende de separar permisos, memoria y CPU para que una carga pesada no comprometa la clase completa."
     )
 
 
-def os_choice_view() -> None:
-    st.header("Decisión 1: plataforma y seguridad")
-    c1, c2 = st.columns([1.05, .95])
-    with c1:
+def selection_security_view() -> None:
+    phase_header(
+        "Fase 1",
+        "1. Selección y Seguridad",
+        "Sistema base monousuario de escritorio y controles para impedir cambios administrativos.",
+    )
+
+    left, right = st.columns([1.05, .95])
+    with left:
+        st.subheader("Decisión defendida")
+        decision("Windows 11 Pro como sistema base para estaciones del profesor y alumnos.")
         st.markdown(
-            '<div class="icon-strip">'
-            + icon_step("A", "Compatibilidad", "Software educativo, navegadores y drivers.")
-            + icon_step("B", "Gobierno", "Usuarios estándar y políticas locales.")
-            + icon_step("C", "Protección", "UAC, Defender, Firewall y BitLocker.")
+            '<div class="mini-grid">'
+            + mini_card("Compatibilidad", "Reduce riesgo operativo con navegadores de examen, software 3D, drivers y periféricos.")
+            + mini_card("Administración", "Permite separar cuenta de IT/profesor y usuarios estándar para alumnos.")
+            + mini_card("Seguridad nativa", "UAC, Defender, Firewall, BitLocker, permisos NTFS y actualizaciones.")
+            + mini_card("Soporte del aula", "Facilita restaurar perfiles, aplicar imagen base y mantener una política común.")
             + "</div>",
             unsafe_allow_html=True,
         )
-        decision("Elección ejecutiva: Windows 11 Pro en las estaciones de trabajo.")
-    with c2:
+    with right:
+        st.subheader("Controles de aula")
         selected = st.multiselect(
-            "Controles de aula",
+            "Seleccionar controles activos",
             ["Usuarios estándar", "UAC activo", "BitLocker", "Defender + Firewall", "Políticas de grupo", "Imagen base"],
             default=["Usuarios estándar", "UAC activo", "Defender + Firewall", "Políticas de grupo"],
         )
         st.progress(min(len(selected) / 6, 1.0), text=f"{len(selected)} de 6 controles activos")
-        st.caption("Objetivo: alumnos operan, IT administra.")
+        st.caption("Lectura ejecutiva: más controles activos significan menos riesgo de cambios no autorizados.")
+
+    pipeline(
+        [
+            ("Alumno", "Usuario estándar"),
+            ("UAC", "Eleva solo IT"),
+            ("Políticas", "Bloquean cambios"),
+            ("BitLocker", "Protege datos"),
+            ("Defender", "Reduce malware"),
+        ]
+    )
+
+    decision(
+        "Justificación ante el Directorio: se prioriza Windows 11 Pro porque combina facilidad de uso para alumnos con mecanismos de control administrativo suficientes para un aula compartida."
+    )
 
 
 def process_isolation_view() -> None:
-    st.header("Decisión 2: aislamiento de procesos")
+    phase_header(
+        "Fase 1",
+        "2. Aislamiento de Procesos",
+        "Cada aplicación debe ejecutar en su propio espacio de memoria virtual protegido.",
+    )
+
+    st.markdown(
+        '<div class="mini-grid">'
+        + mini_card("Estabilidad", "Un fallo en un render 3D no debe tirar el navegador de examen.")
+        + mini_card("Seguridad", "Un proceso no puede leer ni escribir memoria ajena sin autorización.")
+        + mini_card("Recuperación", "IT puede cerrar una app problemática sin reiniciar el equipo.")
+        + mini_card("Concurrencia", "IDE, navegador, antivirus y servicios del SO conviven sin interferirse.")
+        + "</div>",
+        unsafe_allow_html=True,
+    )
+
     app_a, app_b = st.columns(2)
     with app_a:
         st.subheader("Riesgo sin aislamiento")
@@ -449,13 +585,28 @@ def process_isolation_view() -> None:
         )
         st.success("El SO bloquea accesos indebidos.")
 
+    pipeline(
+        [
+            ("App", "Solicita memoria"),
+            ("Proceso", "Espacio propio"),
+            ("SO", "Tabla de páginas"),
+            ("MMU", "Valida acceso"),
+            ("RAM", "Marco físico"),
+        ]
+    )
+
     decision(
-        "Impacto directivo: si un render 3D se bloquea, el examen online y el sistema siguen operativos."
+        "Justificación ante el Directorio: el aislamiento transforma una falla individual en un incidente controlable, no en una caída general del aula."
     )
 
 
 def paging_view() -> None:
-    st.header("Decisión 3: paginación contra fragmentación")
+    phase_header(
+        "Fase 2",
+        "3. Análisis de Deficiencias: Paginación",
+        "El servidor presenta fragmentación y bajo aprovechamiento de RAM.",
+    )
+
     c1, c2 = st.columns([.9, 1.1])
     with c1:
         page_size = st.slider("Tamaño de página / marco (MB)", min_value=1, max_value=8, value=4)
@@ -478,15 +629,30 @@ def paging_view() -> None:
                 cls = "free"
             cells.append(f'<div class="frame {cls}">{label}</div>')
         st.markdown(f'<div class="memory-grid">{"".join(cells)}</div>', unsafe_allow_html=True)
-        st.caption("La RAM se usa en marcos fijos; no requiere bloques contiguos.")
+        st.caption("Los marcos libres pueden estar dispersos; la paginación los aprovecha igual.")
+
+    st.markdown(
+        '<div class="mini-grid">'
+        + mini_card("Problema", "La asignación variable deja huecos que no siempre sirven para nuevos procesos.")
+        + mini_card("Solución", "Páginas y marcos de tamaño fijo evitan buscar un bloque contiguo grande.")
+        + mini_card("Costo aceptado", "Puede quedar fragmentación interna en el último marco.")
+        + mini_card("Beneficio", "Mejor aprovechamiento de RAM y menos fallos por falta de espacio contiguo.")
+        + "</div>",
+        unsafe_allow_html=True,
+    )
 
     decision(
-        "Resultado esperado: menos fragmentación externa, mejor aprovechamiento de RAM y menor probabilidad de colapso por huecos inutilizables."
+        "Informe al Directorio: implementar paginación reduce la fragmentación externa porque el servidor ya no necesita memoria contigua para cargar cada proceso."
     )
 
 
 def mmu_view() -> None:
-    st.header("Decisión 4: MMU como control de acceso")
+    phase_header(
+        "Fase 2",
+        "4. Rol del Hardware: MMU",
+        "La Unidad de Gestión de Memoria traduce direcciones virtuales y protege accesos.",
+    )
+
     virtual_page = st.number_input("Página virtual solicitada", min_value=0, max_value=7, value=3)
     offset = st.number_input("Desplazamiento", min_value=0, max_value=4095, value=128)
     table = {0: 5, 1: 1, 2: 7, 3: 2, 4: 9, 5: 4, 6: 12, 7: 6}
@@ -503,13 +669,29 @@ def mmu_view() -> None:
         + "</div>",
         unsafe_allow_html=True,
     )
+
+    pipeline(
+        [
+            ("Dirección virtual", "Programa"),
+            ("MMU", "Hardware"),
+            ("Tabla", "Mapeo"),
+            ("Permisos", "Protección"),
+            ("Dirección física", "RAM"),
+        ]
+    )
+
     decision(
-        "La MMU convierte direcciones virtuales en físicas, valida permisos y dispara fallos de página cuando falta información en RAM."
+        "Justificación ante el Directorio: la MMU hace viable la paginación en tiempo real; sin ella, la protección y la traducción de memoria serían lentas o inseguras."
     )
 
 
 def round_robin_view() -> None:
-    st.header("Decisión 5: Round Robin para cargas mixtas")
+    phase_header(
+        "Enfoque de consultoría",
+        "5. Round Robin para clases 3D y exámenes online",
+        "Planificación equitativa para que ninguna tarea monopolice la CPU.",
+    )
+
     quantum = st.slider("Quantum de CPU", min_value=1, max_value=6, value=3)
     p1 = st.slider("Render 3D", min_value=2, max_value=18, value=12)
     p2 = st.slider("Examen online", min_value=2, max_value=18, value=5)
@@ -531,25 +713,36 @@ def round_robin_view() -> None:
         waiting = turnaround - p.burst
         rows.append({"Proceso": p.name, "CPU requerida": p.burst, "Finaliza en": completion[p.name], "Espera total": waiting})
     st.dataframe(rows, hide_index=True, use_container_width=True)
+
+    st.markdown(
+        '<div class="mini-grid">'
+        + mini_card("Equidad", "Todos los procesos reciben turnos de CPU.")
+        + mini_card("Respuesta", "El examen conserva interacción aunque haya renderizado.")
+        + mini_card("Riesgo", "Quantum demasiado bajo aumenta cambios de contexto.")
+        + mini_card("Criterio", "Ajustar quantum para balancear fluidez y eficiencia.")
+        + "</div>",
+        unsafe_allow_html=True,
+    )
+
     decision(
-        "Round Robin mantiene respuesta visible: el render avanza, pero no bloquea el examen ni los servicios del sistema."
+        "Defensa ejecutiva: Round Robin es apropiado porque protege la experiencia interactiva del aula frente a procesos intensivos."
     )
 
 
 def board_view() -> None:
-    st.header("Cierre para Directorio")
-    st.markdown(
-        '<div class="kpi-grid">',
-        unsafe_allow_html=True,
+    phase_header(
+        "Cierre",
+        "Decisión integrada para el Directorio",
+        "Síntesis técnica presentada como defensa ejecutiva.",
     )
+
     c1, c2, c3 = st.columns(3)
     with c1:
-        card("Riesgo reducido", "Aula controlada", "Permisos, cifrado y antimalware.")
+        card("Fase 1", "Control de aula", "Windows Pro, usuarios estándar y políticas de seguridad.")
     with c2:
-        card("Memoria estable", "Paginación", "Sin depender de bloques contiguos.")
+        card("Fase 2", "Memoria estable", "Paginación y MMU para aislamiento y aprovechamiento de RAM.")
     with c3:
-        card("Respuesta", "Round Robin", "Turnos de CPU para cargas mixtas.")
-    st.markdown("</div>", unsafe_allow_html=True)
+        card("Operación", "CPU equitativa", "Round Robin evita monopolios de procesos pesados.")
 
     decision(
         "Decisión final: priorizar continuidad académica. La arquitectura propuesta evita que una tarea pesada o defectuosa comprometa clases, exámenes o datos institucionales."
@@ -566,20 +759,21 @@ def sidebar() -> str:
     with st.sidebar:
         st.markdown(
             """
-            <div class="brand-row"><div class="brand-mark">UCES</div><div>Entrega universitaria</div></div>
+            <div class="brand-row"><div class="brand-mark">UCES</div><div>Actividad Integradora</div></div>
             """,
             unsafe_allow_html=True,
         )
+        st.markdown('<div class="nav-title">Estructura según consigna</div>', unsafe_allow_html=True)
         section = st.radio(
-            "Recorrido ejecutivo",
+            "Recorrido de exposición",
             [
-                "Apertura",
-                "Plataforma",
-                "Aislamiento",
-                "Paginación",
-                "MMU",
-                "Round Robin",
-                "Cierre",
+                "Resumen ejecutivo",
+                "Fase 1 / 1. Selección y Seguridad",
+                "Fase 1 / 2. Aislamiento de Procesos",
+                "Fase 2 / 3. Paginación",
+                "Fase 2 / 4. MMU",
+                "Directorio / 5. Round Robin",
+                "Directorio / Cierre y bibliografía",
             ],
         )
         st.divider()
@@ -600,17 +794,17 @@ def main() -> None:
     inject_css()
     section = sidebar()
 
-    if section == "Apertura":
+    if section == "Resumen ejecutivo":
         executive_view()
-    elif section == "Plataforma":
-        os_choice_view()
-    elif section == "Aislamiento":
+    elif section == "Fase 1 / 1. Selección y Seguridad":
+        selection_security_view()
+    elif section == "Fase 1 / 2. Aislamiento de Procesos":
         process_isolation_view()
-    elif section == "Paginación":
+    elif section == "Fase 2 / 3. Paginación":
         paging_view()
-    elif section == "MMU":
+    elif section == "Fase 2 / 4. MMU":
         mmu_view()
-    elif section == "Round Robin":
+    elif section == "Directorio / 5. Round Robin":
         round_robin_view()
     else:
         board_view()
