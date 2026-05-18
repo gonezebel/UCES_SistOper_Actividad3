@@ -444,7 +444,7 @@ def inject_css() -> None:
         }
 
         .security-scale {
-            margin: .45rem 0 .65rem;
+            margin: .32rem 0 .28rem;
         }
 
         .security-labels {
@@ -487,8 +487,8 @@ def inject_css() -> None:
             border: 1px solid var(--line);
             background: #fff;
             border-radius: 8px;
-            padding: .55rem .65rem;
-            margin-bottom: .7rem;
+            padding: .5rem .65rem;
+            margin-bottom: .52rem;
         }
 
         .mini-card,
@@ -645,15 +645,35 @@ def security_bar(active_count: int, total: int) -> None:
 
 def control_details(selected: list[str]) -> None:
     details = {
-        "Usuarios estándar": "Los alumnos pueden usar aplicaciones, pero no instalar software, tocar drivers ni cambiar seguridad del equipo.",
-        "UAC activo": "Cada acción administrativa requiere confirmación elevada; evita que un clic o instalador cambie el sistema sin control.",
-        "BitLocker": "Cifra el disco. Si un equipo se pierde o se retira un disco, los datos académicos no quedan legibles.",
-        "Defender + Firewall": "Reduce malware y conexiones no autorizadas sin comprar una solución adicional para el escenario base.",
-        "Políticas de grupo": "Bloquean paneles, instalaciones, ejecución de herramientas críticas y cambios de configuración del aula.",
-        "Imagen base": "Permite restaurar una terminal a estado conocido si un perfil se degrada o una práctica deja el equipo inconsistente.",
+        "Usuarios estándar": {
+            "active": "Impide que los alumnos instalen software, cambien drivers o modifiquen la seguridad del equipo.",
+            "inactive": "Riesgo: un alumno con privilegios puede cambiar configuraciones, instalar software no autorizado o afectar a otros usuarios.",
+        },
+        "UAC activo": {
+            "active": "Exige confirmación elevada para cambios administrativos y frena instalaciones o ajustes accidentales.",
+            "inactive": "Riesgo: un instalador o clic malicioso puede modificar el sistema sin una barrera de confirmación.",
+        },
+        "BitLocker": {
+            "active": "Cifra el disco y protege datos académicos si se pierde el equipo o se retira la unidad.",
+            "inactive": "Riesgo: ante robo, extravío o extracción del disco, los archivos locales podrían leerse sin autorización.",
+        },
+        "Defender + Firewall": {
+            "active": "Reduce malware y conexiones no autorizadas sin sumar costo de una herramienta externa.",
+            "inactive": "Riesgo: aumenta la exposición a malware, descargas inseguras y conexiones entrantes no deseadas.",
+        },
+        "Políticas de grupo": {
+            "active": "Bloquean paneles, instalaciones, herramientas críticas y cambios de configuración del aula.",
+            "inactive": "Riesgo: cada equipo queda más dependiente del buen uso del alumno y se vuelve más difícil sostener una política común.",
+        },
+        "Imagen base": {
+            "active": "Permite restaurar una terminal a estado conocido si un perfil se degrada o una práctica deja fallas.",
+            "inactive": "Riesgo: recuperar un equipo roto lleva más tiempo y puede afectar el inicio de una clase o examen.",
+        },
     }
-    for name, body in details.items():
-        status = "Activo" if name in selected else "Pendiente"
+    for name, messages in details.items():
+        is_active = name in selected
+        status = "Activo" if is_active else "Pendiente"
+        body = messages["active"] if is_active else messages["inactive"]
         st.markdown(
             f"""
             <div class="control-detail">
