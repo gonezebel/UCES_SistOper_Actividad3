@@ -1133,8 +1133,6 @@ def paging_view() -> None:
         unsafe_allow_html=True,
     )
 
-    decision("Resultado operativo: el servidor usa mejor la RAM disponible y reduce el riesgo de quedarse sin bloques contiguos útiles.")
-
 
 def mmu_view() -> None:
     phase_header(
