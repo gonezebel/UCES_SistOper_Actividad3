@@ -414,6 +414,103 @@ def inject_css() -> None:
         .risk {background: #fde7e3; border-color: var(--danger);}
         .free {background: #f8faf9; color: #9aa8a2;}
 
+        .isolation-layout {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: .75rem;
+            margin-top: .7rem;
+        }
+
+        .scenario-card {
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: #fff;
+            padding: .8rem;
+        }
+
+        .scenario-card.risk-panel {
+            border-color: #f0b9b2;
+            background: #fffafa;
+        }
+
+        .scenario-card.safe-panel {
+            border-color: #9fd5bc;
+            background: #fbfffd;
+        }
+
+        .scenario-card strong {
+            color: var(--ink);
+            display: block;
+            font-size: 1rem;
+            margin-bottom: .45rem;
+        }
+
+        .scenario-card p {
+            color: var(--muted);
+            font-size: .86rem;
+            line-height: 1.35;
+            margin: .4rem 0 0;
+        }
+
+        .process-map {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: .45rem;
+            margin-top: .6rem;
+        }
+
+        .process-node {
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            min-height: 74px;
+            padding: .55rem .35rem;
+            text-align: center;
+            background: #fff;
+            position: relative;
+        }
+
+        .process-node b {
+            display: block;
+            color: var(--ink);
+            font-size: .84rem;
+        }
+
+        .process-node small {
+            display: block;
+            color: var(--muted);
+            font-size: .72rem;
+            margin-top: .2rem;
+        }
+
+        .process-node.compromised {
+            background: #fde7e3;
+            border-color: var(--danger);
+        }
+
+        .process-node.affected {
+            background: #fff4cf;
+            border-color: var(--warn);
+        }
+
+        .process-node.protected {
+            background: #dff2ea;
+            border-color: #72c7a3;
+        }
+
+        .status-pill {
+            display: inline-block;
+            border-radius: 999px;
+            padding: .14rem .45rem;
+            font-size: .68rem;
+            font-weight: 850;
+            margin-top: .42rem;
+            text-transform: uppercase;
+        }
+
+        .status-pill.bad {background: #fde7e3; color: #a3322a;}
+        .status-pill.warn {background: #fff4cf; color: #805a00;}
+        .status-pill.ok {background: #dff2ea; color: var(--uces-dark);}
+
         .gantt {
             display: flex;
             overflow-x: auto;
@@ -553,8 +650,9 @@ def inject_css() -> None:
         }
 
         @media (max-width: 900px) {
-            .kpi-grid, .icon-strip, .mini-grid, .pipeline {grid-template-columns: 1fr;}
+            .kpi-grid, .icon-strip, .mini-grid, .pipeline, .isolation-layout {grid-template-columns: 1fr;}
             .memory-grid {grid-template-columns: repeat(4, 1fr);}
+            .process-map {grid-template-columns: repeat(2, 1fr);}
             .pipeline:before, .pipeline:after {display: none;}
         }
         </style>
@@ -683,6 +781,72 @@ def control_details(selected: list[str]) -> None:
             """,
             unsafe_allow_html=True,
         )
+
+
+def isolation_infographic(scenario: str) -> None:
+    scenarios = {
+        "Render 3D se bloquea": {
+            "trigger": "El motor de render consume memoria y termina con error.",
+            "without": "El error puede invadir memoria compartida, afectar el navegador del examen o forzar reinicio.",
+            "with": "El sistema operativo limita el daño al proceso de render y permite cerrar solo esa aplicación.",
+            "risk": ["Render", "Examen"],
+            "safe": ["Examen", "IDE", "Sistema"],
+        },
+        "Navegador de examen queda comprometido": {
+            "trigger": "Una extensión o sitio malicioso intenta leer datos de otros programas.",
+            "without": "El navegador podría acceder a información del IDE, archivos temporales o credenciales de otra sesión.",
+            "with": "La MMU y los permisos de memoria bloquean el acceso fuera del espacio del navegador.",
+            "risk": ["Examen", "IDE", "Datos"],
+            "safe": ["IDE", "Datos", "Sistema"],
+        },
+        "IDE consume memoria en exceso": {
+            "trigger": "Una ejecución de código entra en bucle o reserva memoria de forma incorrecta.",
+            "without": "El consumo puede degradar toda la terminal y arrastrar servicios que sostienen la clase.",
+            "with": "El proceso queda contenido; IT puede finalizarlo y liberar memoria sin reiniciar el equipo.",
+            "risk": ["IDE", "Sistema"],
+            "safe": ["Examen", "Sistema", "Render"],
+        },
+    }
+    data = scenarios[scenario]
+    nodes = ["IDE", "Examen", "Render", "Sistema"]
+
+    def node_html(name: str, mode: str) -> str:
+        if mode == "without":
+            css = "compromised" if name in data["risk"][:1] else "affected" if name in data["risk"] else ""
+            pill = "Falla" if css == "compromised" else "Afectado" if css == "affected" else "Expuesto"
+            pill_class = "bad" if css == "compromised" else "warn" if css == "affected" else "warn"
+            detail = "Sin límite claro" if css else "Puede recibir impacto"
+        else:
+            css = "compromised" if name == data["risk"][0] else "protected" if name in data["safe"] else ""
+            pill = "Aislado" if css == "compromised" else "Protegido" if css == "protected" else "Estable"
+            pill_class = "bad" if css == "compromised" else "ok"
+            detail = "Se cierra el proceso" if css == "compromised" else "Memoria separada"
+        return (
+            f'<div class="process-node {css}">'
+            f"<b>{name}</b><small>{detail}</small>"
+            f'<span class="status-pill {pill_class}">{pill}</span>'
+            "</div>"
+        )
+
+    st.markdown(
+        f"""
+        <div class="isolation-layout">
+            <div class="scenario-card risk-panel">
+                <strong>Sin aislamiento</strong>
+                <p>{data["trigger"]}</p>
+                <div class="process-map">{"".join(node_html(node, "without") for node in nodes)}</div>
+                <p>{data["without"]}</p>
+            </div>
+            <div class="scenario-card safe-panel">
+                <strong>Con aislamiento de procesos</strong>
+                <p>{data["trigger"]}</p>
+                <div class="process-map">{"".join(node_html(node, "with") for node in nodes)}</div>
+                <p>{data["with"]}</p>
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
 
 
 def phase_header(phase: str, title: str, subtitle: str) -> None:
@@ -823,43 +987,12 @@ def process_isolation_view() -> None:
         unsafe_allow_html=True,
     )
 
-    app_a, app_b = st.columns(2)
-    with app_a:
-        st.subheader("Riesgo sin aislamiento")
-        st.markdown(
-            """
-            <div class="memory-grid">
-                <div class="frame used">IDE</div><div class="frame used">IDE</div><div class="frame risk">Error</div><div class="frame used">Examen</div>
-                <div class="frame used">Render</div><div class="frame risk">Daño</div><div class="frame used">SO</div><div class="frame used">Datos</div>
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
-        st.error("Una falla puede contaminar otras tareas.")
-    with app_b:
-        st.subheader("Modelo recomendado")
-        st.markdown(
-            """
-            <div class="memory-grid">
-                <div class="frame used">IDE</div><div class="frame used">IDE</div><div class="frame free">Límite</div><div class="frame used">Examen</div>
-                <div class="frame used">Examen</div><div class="frame free">Límite</div><div class="frame used">Render</div><div class="frame used">Render</div>
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
-        st.success("El SO bloquea accesos indebidos.")
-
-    pipeline(
-        [
-            ("App", "Solicita memoria"),
-            ("Proceso", "Espacio propio"),
-            ("SO", "Tabla de páginas"),
-            ("MMU", "Valida acceso"),
-            ("RAM", "Marco físico"),
-        ]
+    scenario = st.radio(
+        "Escenario de incidente",
+        ["Render 3D se bloquea", "Navegador de examen queda comprometido", "IDE consume memoria en exceso"],
+        horizontal=True,
     )
-
-    decision("Resultado operativo: una aplicación defectuosa se trata como incidente aislado, no como caída general del aula.")
+    isolation_infographic(scenario)
 
 
 def paging_view() -> None:
