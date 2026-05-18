@@ -1110,8 +1110,9 @@ def paging_view() -> None:
         process_size = st.slider("Memoria requerida por proceso (MB)", min_value=5, max_value=48, value=22)
         frames_needed = math.ceil(process_size / page_size)
         internal_waste = frames_needed * page_size - process_size
-        st.metric("Páginas necesarias", frames_needed)
-        st.metric("Fragmentación interna", f"{internal_waste} MB")
+        metric_left, metric_right = st.columns(2)
+        metric_left.metric("Páginas necesarias", frames_needed)
+        metric_right.metric("Fragmentación interna", f"{internal_waste} MB")
     with c2:
         cells = []
         for i in range(24):
