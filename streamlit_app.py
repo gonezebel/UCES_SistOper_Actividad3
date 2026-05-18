@@ -693,6 +693,11 @@ def selection_security_view() -> None:
             + "</div>",
             unsafe_allow_html=True,
         )
+        st.markdown(
+            mini_card("Costo / seguridad / eficiencia", "El costo inicial es moderado; la seguridad sube por cuentas estándar, cifrado y políticas; la eficiencia mejora porque IT puede administrar y restaurar equipos sin rediseñar todo el entorno.")
+            + mini_card("Ejemplo real", "En una clase con Blender, navegadores de examen y proyectores, perder tiempo instalando drivers o resolviendo permisos durante la clase tiene más impacto que el costo de una licencia ya administrable."),
+            unsafe_allow_html=True,
+        )
     with right:
         st.subheader("Controles de aula")
         selected = st.multiselect(
@@ -704,13 +709,6 @@ def selection_security_view() -> None:
         st.caption(f"{len(selected)} de 6 controles activos. Cada control agrega seguridad, pero también administración y mantenimiento.")
         control_details(selected)
 
-    st.markdown(
-        '<div class="mini-grid">'
-        + mini_card("Ejemplo real", "En una clase con Blender, navegadores de examen y proyectores, perder tiempo instalando drivers o resolviendo permisos durante la clase tiene más impacto que el costo de una licencia ya administrable.")
-        + mini_card("Costo / seguridad / eficiencia", "El costo inicial es moderado; la seguridad sube por cuentas estándar, cifrado y políticas; la eficiencia mejora porque IT puede administrar y restaurar equipos sin rediseñar todo el entorno.")
-        + "</div>",
-        unsafe_allow_html=True,
-    )
 
 
 def process_isolation_view() -> None:
