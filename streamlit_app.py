@@ -1361,16 +1361,19 @@ def round_robin_view() -> None:
     )
     context_card(
         "Criterio ejecutivo",
-        "Round Robin se defiende porque reparte CPU en turnos. No maximiza cada tarea individual, pero protege la respuesta percibida cuando conviven actividades pesadas e interactivas.",
+        "<b>Round Robin es una opción adecuada porque reparte CPU en turnos. No maximiza cada tarea individual, pero protege la respuesta percibida cuando conviven actividades pesadas e interactivas.</b>",
         "En una clase, un render 3D puede necesitar mucho CPU. El examen online, el antivirus y el sistema no pueden quedar esperando hasta que termine el render.",
-        "El costo es mayor cantidad de cambios de contexto si el quantum es bajo; la seguridad operativa sube porque servicios críticos siguen respondiendo; la eficiencia del aula mejora porque todos los procesos avanzan.",
+        "",
     )
 
-    quantum = st.slider("Quantum de CPU", min_value=1, max_value=6, value=3)
-    p1 = st.slider("Render 3D", min_value=2, max_value=18, value=12)
-    p2 = st.slider("Examen online", min_value=2, max_value=18, value=5)
-    p3 = st.slider("IDE del alumno", min_value=2, max_value=18, value=8)
-    p4 = st.slider("Sistema / antivirus", min_value=2, max_value=18, value=4)
+    left, right = st.columns(2)
+    with left:
+        quantum = st.slider("Quantum de CPU", min_value=1, max_value=6, value=3)
+        p1 = st.slider("Render 3D", min_value=2, max_value=18, value=12)
+        p2 = st.slider("Examen online", min_value=2, max_value=18, value=5)
+    with right:
+        p3 = st.slider("IDE del alumno", min_value=2, max_value=18, value=8)
+        p4 = st.slider("Sistema / antivirus", min_value=2, max_value=18, value=4)
     processes = [
         Process("Render", p1),
         Process("Examen", p2),
@@ -1397,8 +1400,6 @@ def round_robin_view() -> None:
         + "</div>",
         unsafe_allow_html=True,
     )
-
-    decision("Resultado operativo: el render avanza sin bloquear exámenes, navegadores ni servicios del sistema.")
 
 
 def board_view() -> None:
