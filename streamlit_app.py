@@ -284,11 +284,35 @@ def inject_css() -> None:
             font-style: normal;
         }
 
+        .context-card.compact-context {
+            padding: .72rem .9rem;
+            margin: .45rem 0 .55rem;
+        }
+
+        .context-card.compact-context p {
+            margin: .24rem 0;
+            line-height: 1.34;
+        }
+
         .mini-grid {
             display: grid;
             grid-template-columns: repeat(2, minmax(0, 1fr));
             gap: .7rem;
             margin: .7rem 0 .75rem;
+        }
+
+        .isolation-mini-grid {
+            gap: .5rem;
+            margin: .42rem 0 .5rem;
+        }
+
+        .isolation-mini-grid .mini-card {
+            padding: .55rem .72rem;
+        }
+
+        .isolation-mini-grid .mini-card p {
+            margin-top: .24rem;
+            line-height: 1.32;
         }
 
         .stack-cards {
@@ -513,6 +537,39 @@ def inject_css() -> None:
         .status-pill.warn {background: #fff4cf; color: #805a00;}
         .status-pill.ok {background: #dff2ea; color: var(--uces-dark);}
 
+        .isolation-layout.compact-isolation {
+            gap: .55rem;
+            margin-top: .45rem;
+        }
+
+        .compact-isolation .scenario-card {
+            padding: .62rem .72rem;
+        }
+
+        .compact-isolation .scenario-card strong {
+            margin-bottom: .28rem;
+        }
+
+        .compact-isolation .scenario-card p {
+            margin: .26rem 0 0;
+            line-height: 1.25;
+        }
+
+        .compact-isolation .process-map {
+            gap: .32rem;
+            margin-top: .38rem;
+        }
+
+        .compact-isolation .process-node {
+            min-height: 62px;
+            padding: .42rem .3rem;
+        }
+
+        .compact-isolation .status-pill {
+            margin-top: .28rem;
+            padding: .1rem .36rem;
+        }
+
         .gantt {
             display: flex;
             overflow-x: auto;
@@ -697,11 +754,12 @@ def mini_card(title: str, body: str) -> str:
     return f'<div class="mini-card"><strong>{title}</strong><p>{body}</p></div>'
 
 
-def context_card(title: str, explanation: str, example: str, balance: str) -> None:
+def context_card(title: str, explanation: str, example: str, balance: str, class_name: str = "") -> None:
     balance_html = f"<p><em>Costo / seguridad / eficiencia:</em> {balance}</p>" if balance else ""
+    extra_class = f" {class_name}" if class_name else ""
     st.markdown(
         f"""
-        <div class="context-card">
+        <div class="context-card{extra_class}">
             <strong>{title}</strong>
             <p>{explanation}</p>
             <p><em>Ejemplo real:</em> {example}</p>
@@ -850,7 +908,7 @@ def isolation_infographic(scenario: str) -> None:
 
     st.markdown(
         f"""
-        <div class="isolation-layout">
+        <div class="isolation-layout compact-isolation">
             <div class="scenario-card risk-panel">
                 <strong>Sin aislamiento</strong>
                 <p>{data["trigger"]}</p>
@@ -937,7 +995,7 @@ def isolation_cost_cards(scenario: str) -> str:
         "Más 1-2 h técnicas de validación, pruebas básicas y documentación operativa. Ese esfuerzo se muestra aparte y no se convierte a USD."
     )
     return (
-        '<div class="mini-grid">'
+        '<div class="mini-grid isolation-mini-grid">'
         + mini_card("Costo base estimado (USD)", base)
         + mini_card("Costo evitado por escenario", risks[scenario])
         + "</div>"
@@ -1070,10 +1128,11 @@ def process_isolation_view() -> None:
         "<b>El aislamiento de procesos convierte errores individuales en fallas contenidas: si una aplicación se bloquea, no arrastra al sistema completo ni compromete datos de otra actividad.</b>",
         "Durante un examen online, un alumno puede tener abierto un IDE o una herramienta de render. Si el render consume memoria o falla, el navegador del examen debe seguir protegido.",
         "",
+        "compact-context",
     )
 
     st.markdown(
-        '<div class="mini-grid">'
+        '<div class="mini-grid isolation-mini-grid">'
         + mini_card("Estabilidad", "Un fallo en un render 3D no debe tirar el navegador de examen.")
         + mini_card("Seguridad", "Un proceso no puede leer ni escribir memoria ajena sin autorización.")
         + mini_card("Recuperación", "IT puede cerrar una app problemática sin reiniciar el equipo.")
