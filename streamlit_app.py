@@ -29,6 +29,7 @@ ACADEMIC_DATA = {
     "Actividad": "Integrador, Parte 1",
     "Profesor/a": "Grimaldi, Camila",
     "Alumno/a": "Beloqui, Gonzalo",
+    "Matrícula": "148741",
     "Fecha entrega": "2026/05/21",
 }
 
