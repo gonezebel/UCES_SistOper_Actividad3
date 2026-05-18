@@ -813,16 +813,16 @@ def inject_css() -> None:
         .sidebar-card {
             border: 1px solid var(--line);
             border-radius: 8px;
-            padding: .36rem .52rem;
+            padding: .42rem .58rem;
             background: #ffffff;
-            margin-bottom: .3rem;
+            margin-bottom: .34rem;
             width: calc(100% - .12rem);
         }
 
         .sidebar-card small {
             display: block;
             color: var(--uces-dark);
-            font-size: .62rem;
+            font-size: .65rem;
             font-weight: 800;
             text-transform: uppercase;
         }
@@ -831,9 +831,9 @@ def inject_css() -> None:
             display: block;
             color: var(--ink);
             font-weight: 650;
-            font-size: .74rem;
+            font-size: .78rem;
             line-height: 1.25;
-            margin-top: .04rem;
+            margin-top: .05rem;
         }
 
         .nav-title {
@@ -1484,19 +1484,19 @@ def round_robin_view() -> None:
 def board_view() -> None:
     phase_header(
         "Cierre",
-        "Decisión integrada para el Directorio",
+        "Conclusión",
     )
 
     c1, c2, c3 = st.columns(3)
     with c1:
-        card("Fase 1", "Control de aula", "Windows Pro, usuarios estándar y políticas de seguridad.")
+        card("Fase 1", "Base segura", "Sistema administrable, usuarios estándar y controles nativos reducen incidentes en el aula.")
     with c2:
-        card("Fase 2", "Memoria estable", "Paginación y MMU para aislamiento y aprovechamiento de RAM.")
+        card("Fase 2", "Memoria confiable", "Aislamiento, paginación y MMU sostienen varias tareas sin depender de bloques contiguos.")
     with c3:
-        card("Operación", "CPU equitativa", "Round Robin evita monopolios de procesos pesados.")
+        card("Fase 3", "CPU equitativa", "Round Robin reparte turnos para que render, examen y servicios críticos sigan avanzando.")
 
     decision(
-        "Decisión final: priorizar continuidad académica. La arquitectura propuesta evita que una tarea pesada o defectuosa comprometa clases, exámenes o datos institucionales."
+        "Conclusión final: la propuesta prioriza continuidad académica. La combinación de controles de seguridad, aislamiento de procesos, memoria virtual y planificación por turnos reduce el riesgo de que una tarea pesada o defectuosa comprometa clases, exámenes o datos institucionales."
     )
 
     st.subheader("Referencias bibliográficas")
@@ -1522,8 +1522,8 @@ def sidebar() -> str:
                 "Fase 1 / 2. Aislamiento de Procesos",
                 "Fase 2 / 3. Paginación",
                 "Fase 2 / 4. MMU",
-                "Directorio / 5. Round Robin",
-                "Directorio / Cierre y bibliografía",
+                "Fase 3 / 5. Round Robin",
+                "Conclusión",
             ],
         )
         st.divider()
@@ -1554,7 +1554,7 @@ def main() -> None:
         paging_view()
     elif section == "Fase 2 / 4. MMU":
         mmu_view()
-    elif section == "Directorio / 5. Round Robin":
+    elif section == "Fase 3 / 5. Round Robin":
         round_robin_view()
     else:
         board_view()
