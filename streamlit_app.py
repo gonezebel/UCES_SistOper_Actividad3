@@ -146,18 +146,6 @@ def inject_css() -> None:
             max-width: 830px;
         }
 
-        .phase-label {
-            display: inline-block;
-            background: var(--uces-green);
-            color: #fff;
-            border-radius: 999px;
-            padding: .22rem .75rem;
-            font-size: .76rem;
-            font-weight: 850;
-            text-transform: uppercase;
-            margin-bottom: .45rem;
-        }
-
         .kpi-grid {
             display: grid;
             grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -592,7 +580,6 @@ def control_details(selected: list[str]) -> None:
 
 
 def phase_header(phase: str, title: str, subtitle: str) -> None:
-    st.markdown(f'<span class="phase-label">{phase}</span>', unsafe_allow_html=True)
     st.header(title)
     st.caption(subtitle)
 
@@ -630,7 +617,6 @@ def executive_view() -> None:
     st.markdown(
         """
         <div class="hero">
-            <div class="brand-row"><div class="brand-mark">UCES</div><div>Sistemas Operativos</div></div>
             <h1>Infraestructura académica sin colapsos</h1>
             <p>Propuesta de IT para una academia tecnológica: estaciones seguras, procesos aislados, memoria paginada y CPU repartida de forma equitativa.</p>
         </div>
