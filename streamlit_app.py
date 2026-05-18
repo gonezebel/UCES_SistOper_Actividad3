@@ -698,13 +698,14 @@ def mini_card(title: str, body: str) -> str:
 
 
 def context_card(title: str, explanation: str, example: str, balance: str) -> None:
+    balance_html = f"<p><em>Costo / seguridad / eficiencia:</em> {balance}</p>" if balance else ""
     st.markdown(
         f"""
         <div class="context-card">
             <strong>{title}</strong>
             <p>{explanation}</p>
             <p><em>Ejemplo real:</em> {example}</p>
-            <p><em>Costo / seguridad / eficiencia:</em> {balance}</p>
+            {balance_html}
         </div>
         """,
         unsafe_allow_html=True,
@@ -1068,7 +1069,7 @@ def process_isolation_view() -> None:
         "Criterio ejecutivo",
         "<b>El aislamiento de procesos convierte errores individuales en fallas contenidas: si una aplicación se bloquea, no arrastra al sistema completo ni compromete datos de otra actividad.</b>",
         "Durante un examen online, un alumno puede tener abierto un IDE o una herramienta de render. Si el render consume memoria o falla, el navegador del examen debe seguir protegido.",
-        "Licencias adicionales: USD 0, porque la separación de procesos ya viene integrada en el sistema operativo y se apoya en hardware estándar; más 1-2 h técnicas de validación y prueba.",
+        "",
     )
 
     st.markdown(
