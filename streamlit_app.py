@@ -65,7 +65,7 @@ def inject_css() -> None:
         }
 
         .block-container {
-            padding-top: .75rem;
+            padding-top: 1.2rem;
             padding-bottom: 1.25rem;
             padding-left: 1.4rem;
             padding-right: 1.4rem;
@@ -103,6 +103,8 @@ def inject_css() -> None:
         h1 {
             font-size: 2rem !important;
             margin-bottom: .35rem !important;
+            line-height: 1.22 !important;
+            padding-top: .15rem;
         }
 
         h2 {
@@ -252,8 +254,15 @@ def inject_css() -> None:
         .mini-grid {
             display: grid;
             grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: .55rem;
+            gap: .65rem;
             margin: .55rem 0 .7rem;
+        }
+
+        .stack-cards {
+            display: flex;
+            flex-direction: column;
+            gap: .55rem;
+            margin-top: .55rem;
         }
 
         .icon-strip {
@@ -447,7 +456,7 @@ def inject_css() -> None:
             background: #fff;
             border-radius: 8px;
             padding: .55rem .65rem;
-            margin-bottom: .42rem;
+            margin-bottom: .52rem;
         }
 
         .control-detail b {
@@ -471,7 +480,7 @@ def inject_css() -> None:
             border-radius: 8px;
             padding: .55rem .65rem;
             background: #ffffff;
-            margin-bottom: .45rem;
+            margin-bottom: .55rem;
         }
 
         .sidebar-card small {
@@ -707,8 +716,10 @@ def selection_security_view() -> None:
             unsafe_allow_html=True,
         )
         st.markdown(
-            mini_card("Costo / seguridad / eficiencia", "El costo inicial es moderado; la seguridad sube por cuentas estándar, cifrado y políticas; la eficiencia mejora porque IT puede administrar y restaurar equipos sin rediseñar todo el entorno.")
-            + mini_card("Ejemplo real", "En una clase con Blender, navegadores de examen y proyectores, perder tiempo instalando drivers o resolviendo permisos durante la clase tiene más impacto que el costo de una licencia ya administrable."),
+            '<div class="stack-cards">'
+            + mini_card("Costo / seguridad / eficiencia", "El costo inicial es moderado; la seguridad sube por cuentas estándar, cifrado y políticas; la eficiencia mejora porque IT puede administrar y restaurar equipos sin rediseñar todo el entorno.")
+            + mini_card("Ejemplo real", "En una clase con Blender, navegadores de examen y proyectores, perder tiempo instalando drivers o resolviendo permisos durante la clase tiene más impacto que el costo de una licencia ya administrable.")
+            + "</div>",
             unsafe_allow_html=True,
         )
     with right:
