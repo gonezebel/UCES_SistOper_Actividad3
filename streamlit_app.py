@@ -106,18 +106,6 @@ def inject_css() -> None:
             overflow: hidden;
         }
 
-        .hero:after {
-            content: "";
-            position: absolute;
-            right: 18px;
-            top: 18px;
-            width: 118px;
-            height: 118px;
-            border: 20px solid rgba(0, 140, 90, .10);
-            border-radius: 50%;
-            pointer-events: none;
-        }
-
         .brand-row {
             display: flex;
             align-items: center;
@@ -944,7 +932,7 @@ def sidebar() -> str:
     with st.sidebar:
         st.markdown(
             """
-            <div class="brand-row"><div class="brand-mark">UCES</div><div>Actividad Integradora</div></div>
+            <div class="brand-row"><div class="brand-mark">UCES</div><div>Sistemas Operativos</div></div>
             """,
             unsafe_allow_html=True,
         )
