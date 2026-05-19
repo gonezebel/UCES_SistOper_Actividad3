@@ -512,13 +512,13 @@ def inject_css() -> None:
             display: flex;
             align-items: center;
             justify-content: center;
-            min-height: calc(100vh - 70px);
+            min-height: calc(100vh - 130px);
             padding: .3rem 0;
         }
 
         .mmu-image-only img {
             width: 100%;
-            max-height: calc(100vh - 84px);
+            max-height: calc(100vh - 145px);
             object-fit: contain;
             display: block;
             border-radius: 8px;
@@ -1209,9 +1209,9 @@ def mmu_infographic() -> None:
 
 
 def mmu_image_page() -> None:
-    image_path = Path(__file__).parent / "02_Imagenes" / "00_infografia_MMU.png"
+    image_path = Path(__file__).parent / "02_Imagenes" / "00_infografia_MMU_sin_encabezado.png"
     if not image_path.exists():
-        st.error("No se encontró la imagen de MMU en 02_Imagenes/00_infografia_MMU.png.")
+        st.error("No se encontró la imagen de MMU en 02_Imagenes/00_infografia_MMU_sin_encabezado.png.")
         return
     encoded = base64.b64encode(image_path.read_bytes()).decode("ascii")
     st.markdown(
@@ -1461,6 +1461,10 @@ def paging_view() -> None:
 
 
 def mmu_view() -> None:
+    phase_header(
+        "Fase 2",
+        "4. Rol del Hardware: MMU",
+    )
     mmu_image_page()
 
 
