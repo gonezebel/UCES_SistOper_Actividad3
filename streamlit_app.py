@@ -1516,14 +1516,14 @@ def board_view() -> None:
 
     c1, c2, c3 = st.columns(3)
     with c1:
-        card("Fase 1", "Base segura", "Sistema administrable, usuarios estándar y controles nativos reducen incidentes en el aula.")
+        card("Fase 1", "Windows + seguridad", "Windows 11 Pro, usuarios estándar y controles nativos reducen cambios no autorizados en el aula.")
     with c2:
-        card("Fase 2", "Memoria confiable", "Aislamiento, paginación y MMU sostienen varias tareas sin depender de bloques contiguos.")
+        card("Fase 2", "Procesos + memoria", "Aislamiento, paginación y MMU separan fallas, aprovechan RAM y protegen direcciones de memoria.")
     with c3:
         card("Fase 3", "CPU equitativa", "Round Robin reparte turnos para que render, examen y servicios críticos sigan avanzando.")
 
     decision(
-        "Conclusión final: la propuesta prioriza continuidad académica. La combinación de controles de seguridad, aislamiento de procesos, memoria virtual y planificación por turnos reduce el riesgo de que una tarea pesada o defectuosa comprometa clases, exámenes o datos institucionales."
+        "Conclusión final: la propuesta prioriza continuidad académica. La selección del sistema operativo, los controles de seguridad, el aislamiento de procesos, la paginación, la MMU y Round Robin reducen el riesgo de que una tarea pesada o defectuosa comprometa clases, exámenes o datos institucionales."
     )
 
     st.subheader("Referencias bibliográficas")
