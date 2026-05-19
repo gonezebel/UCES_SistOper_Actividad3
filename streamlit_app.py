@@ -1,5 +1,7 @@
+import base64
 import math
 from dataclasses import dataclass
+from pathlib import Path
 
 import streamlit as st
 
@@ -504,6 +506,22 @@ def inject_css() -> None:
             color: var(--muted);
             font-size: .84rem;
             line-height: 1.35;
+        }
+
+        .mmu-image-only {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: calc(100vh - 70px);
+            padding: .3rem 0;
+        }
+
+        .mmu-image-only img {
+            width: 100%;
+            max-height: calc(100vh - 84px);
+            object-fit: contain;
+            display: block;
+            border-radius: 8px;
         }
 
         .memory-grid {
@@ -1190,6 +1208,22 @@ def mmu_infographic() -> None:
     )
 
 
+def mmu_image_page() -> None:
+    image_path = Path(__file__).parent / "02_Imagenes" / "00_infografia_MMU.png"
+    if not image_path.exists():
+        st.error("No se encontró la imagen de MMU en 02_Imagenes/00_infografia_MMU.png.")
+        return
+    encoded = base64.b64encode(image_path.read_bytes()).decode("ascii")
+    st.markdown(
+        f"""
+        <div class="mmu-image-only">
+            <img src="data:image/png;base64,{encoded}" alt="Infografía de MMU y paginación">
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+
 def phase_header(phase: str, title: str) -> None:
     st.markdown(
         f"""
@@ -1427,18 +1461,7 @@ def paging_view() -> None:
 
 
 def mmu_view() -> None:
-    phase_header(
-        "Fase 2",
-        "4. Rol del Hardware: MMU",
-    )
-    context_card(
-        "Criterio ejecutivo",
-        "La MMU es el componente que vuelve práctica y segura la memoria virtual: traduce direcciones en hardware, verifica permisos y habilita fallos de página controlados por el sistema operativo.",
-        "Cuando un navegador de examen pide leer memoria, la MMU valida si esa dirección pertenece a su proceso. Si una app intenta leer memoria del examen, el acceso se bloquea.",
-        "El costo viene incluido en el hardware moderno; la seguridad aumenta por control de accesos; la eficiencia mejora porque la traducción ocurre en hardware y no por software lento.",
-    )
-
-    mmu_infographic()
+    mmu_image_page()
 
 
 def round_robin_view() -> None:
