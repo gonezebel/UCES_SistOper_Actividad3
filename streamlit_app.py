@@ -1392,7 +1392,7 @@ def paging_view() -> None:
         "Criterio ejecutivo",
         "<b>La paginación se recomienda porque evita depender de bloques contiguos de memoria. El servidor puede cargar partes de procesos en marcos dispersos y sostener varias tareas simultáneas.</b>",
         "Si el servidor atiende archivos, aulas virtuales y renderizados, puede tener RAM libre repartida en huecos. Sin paginación, esos huecos pueden no servir; con paginación, se aprovechan.",
-        "Inversión incremental estimada: USD 0 en licencias adicionales si el hardware y el sistema operativo actual ya soportan memoria virtual. La alternativa de resolverlo solo comprando más RAM/servidor requiere cotización en USD y no elimina por sí sola la fragmentación ni mejora el aislamiento. Por eso el monto exacto no es confiable sin presupuesto de proveedor; lo confiable es comparar costo incremental bajo contra menor riesgo operativo.",
+        "Inversión incremental: USD 0 en licencias si el equipo ya soporta memoria virtual. Comprar más RAM o servidor requiere cotización y no resuelve por sí solo la fragmentación ni el aislamiento.",
     )
 
     c1, c2 = st.columns([.9, 1.1])
@@ -1472,7 +1472,7 @@ def round_robin_view() -> None:
         '<div class="rr-layout">'
         + rr_results_table(processes, timeline, completion)
         + '<div class="rr-note-stack">'
-        + mini_card("Cómo leer la tabla", "Cada rango inicio-fin es un turno de CPU. Si un proceso tiene varios rangos, vuelve a la cola porque todavía le falta trabajo.")
+        + mini_card("Interpretación de turnos", "Cada rango inicio-fin es un turno de CPU. Si un proceso tiene varios rangos, vuelve a la cola porque todavía le falta trabajo.")
         + mini_card("Lectura del quantum", rr_quantum_reading(quantum))
         + mini_card("Criterio ejecutivo", "El examen y el sistema reciben turnos aunque el render siga activo; eso protege la percepción de respuesta del aula.")
         + "</div>"
