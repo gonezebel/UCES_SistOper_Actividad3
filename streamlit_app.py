@@ -879,9 +879,45 @@ def inject_css() -> None:
 
         .apa-list {
             border-top: 1px solid var(--line);
-            padding-top: .5rem;
+            padding-top: .35rem;
             color: var(--ink);
-            font-size: .95rem;
+            font-size: .72rem;
+            line-height: 1.22;
+        }
+
+        .apa-list p {
+            margin: .16rem 0;
+        }
+
+        .conclusion-main {
+            border-left: 6px solid var(--uces-green);
+            background: var(--uces-light);
+            border-radius: 8px;
+            padding: 1.05rem 1.2rem;
+            color: var(--ink);
+            font-size: 1.08rem;
+            font-weight: 700;
+            line-height: 1.42;
+            margin: .55rem 0 .85rem;
+        }
+
+        .conclusion-main strong {
+            color: var(--uces-dark);
+            text-transform: uppercase;
+            font-size: .78rem;
+            display: block;
+            margin-bottom: .32rem;
+        }
+
+        .conclusion-references-title {
+            color: var(--uces-dark);
+            font-size: .88rem;
+            margin: .75rem 0 .2rem;
+            font-weight: 850;
+        }
+
+        .conclusion-grid {
+            margin-bottom: .65rem;
         }
 
         @media (max-width: 900px) {
@@ -1514,6 +1550,19 @@ def board_view() -> None:
         "Conclusión",
     )
 
+    st.markdown(
+        """
+        <div class="conclusion-main">
+            <strong>Conclusión final</strong>
+            La propuesta prioriza continuidad académica. La selección del sistema operativo, los controles de seguridad,
+            el aislamiento de procesos, la paginación, la MMU y Round Robin reducen el riesgo de que una tarea pesada
+            o defectuosa comprometa clases, exámenes o datos institucionales.
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+    st.markdown('<div class="conclusion-grid">', unsafe_allow_html=True)
     c1, c2, c3 = st.columns(3)
     with c1:
         card("Fase 1", "Windows + seguridad", "Windows 11 Pro, usuarios estándar y controles nativos reducen cambios no autorizados en el aula.")
@@ -1521,15 +1570,12 @@ def board_view() -> None:
         card("Fase 2", "Procesos + memoria", "Aislamiento, paginación y MMU separan fallas, aprovechan RAM y protegen direcciones de memoria.")
     with c3:
         card("Fase 3", "CPU equitativa", "Round Robin reparte turnos para que render, examen y servicios críticos sigan avanzando.")
+    st.markdown("</div>", unsafe_allow_html=True)
 
-    decision(
-        "Conclusión final: la propuesta prioriza continuidad académica. La selección del sistema operativo, los controles de seguridad, el aislamiento de procesos, la paginación, la MMU y Round Robin reducen el riesgo de que una tarea pesada o defectuosa comprometa clases, exámenes o datos institucionales."
-    )
-
-    st.subheader("Referencias bibliográficas")
+    st.markdown('<div class="conclusion-references-title">Referencias bibliográficas</div>', unsafe_allow_html=True)
     st.markdown('<div class="apa-list">', unsafe_allow_html=True)
     for ref in REFERENCIAS:
-        st.markdown(f"- {ref}")
+        st.markdown(f"<p>{ref}</p>", unsafe_allow_html=True)
     st.markdown("</div>", unsafe_allow_html=True)
 
 
