@@ -524,6 +524,22 @@ def inject_css() -> None:
             border-radius: 8px;
         }
 
+        .intro-image-only {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: calc(100vh - 130px);
+            padding: .3rem 0;
+        }
+
+        .intro-image-only img {
+            width: 100%;
+            max-height: calc(100vh - 145px);
+            object-fit: contain;
+            display: block;
+            border-radius: 8px;
+        }
+
         .memory-grid {
             display: grid;
             grid-template-columns: repeat(8, 1fr);
@@ -1348,37 +1364,23 @@ def rr_quantum_reading(quantum: int) -> str:
     return "Quantum equilibrado: reparte CPU sin generar demasiados cambios de turno ni esperas largas."
 
 
-def executive_view() -> None:
+def introduction_view() -> None:
+    phase_header(
+        "Inicio",
+        "Introducción",
+    )
+    image_path = Path(__file__).parent / "02_Imagenes" / "01_introduccion.png"
+    if not image_path.exists():
+        st.error("No se encontró la imagen de introducción en 02_Imagenes/01_introduccion.png.")
+        return
+    encoded = base64.b64encode(image_path.read_bytes()).decode("ascii")
     st.markdown(
-        """
-        <div class="hero">
-            <h1>Infraestructura académica sin colapsos</h1>
-            <p>Propuesta de IT para una academia tecnológica: estaciones seguras, procesos aislados, memoria paginada y CPU repartida de forma equitativa.</p>
+        f"""
+        <div class="intro-image-only">
+            <img src="data:image/png;base64,{encoded}" alt="Introducción al caso CrowdStrike">
         </div>
         """,
         unsafe_allow_html=True,
-    )
-
-    c1, c2, c3 = st.columns(3)
-    with c1:
-        card("Fase 1", "Windows + control", "Plataforma de escritorio con cuentas sin privilegios y herramientas nativas.")
-    with c2:
-        card("Fase 2", "Paginación + MMU", "Memoria en bloques fijos, traducción de direcciones y protección.")
-    with c3:
-        card("Directorio", "Round Robin", "El render 3D no bloquea exámenes ni servicios críticos.")
-
-    pipeline(
-        [
-            ("Alumno", "Aplicación"),
-            ("Proceso", "Aislamiento"),
-            ("MMU", "Traducción"),
-            ("RAM", "Páginas"),
-            ("CPU", "Turnos"),
-        ]
-    )
-
-    decision(
-        "Mensaje central: la continuidad académica depende de separar permisos, memoria y CPU para que una carga pesada no comprometa la clase completa."
     )
 
 
@@ -1590,7 +1592,7 @@ def sidebar() -> str:
         section = st.radio(
             "",
             [
-                "Resumen ejecutivo",
+                "Introducción",
                 "Fase 1 / 1. Selección y Seguridad",
                 "Fase 1 / 2. Aislamiento de Procesos",
                 "Fase 2 / 3. Paginación",
@@ -1617,8 +1619,8 @@ def main() -> None:
     inject_css()
     section = sidebar()
 
-    if section == "Resumen ejecutivo":
-        executive_view()
+    if section == "Introducción":
+        introduction_view()
     elif section == "Fase 1 / 1. Selección y Seguridad":
         selection_security_view()
     elif section == "Fase 1 / 2. Aislamiento de Procesos":
