@@ -528,16 +528,29 @@ def inject_css() -> None:
             display: flex;
             align-items: center;
             justify-content: center;
-            min-height: calc(100vh - 130px);
+            min-height: calc(100vh - 165px);
             padding: .3rem 0;
         }
 
         .intro-image-only img {
             width: 100%;
-            max-height: calc(100vh - 145px);
+            max-height: calc(100vh - 190px);
             object-fit: contain;
             display: block;
             border-radius: 8px;
+        }
+
+        .intro-source-link {
+            margin-top: .18rem;
+            font-size: .78rem;
+            color: var(--muted);
+        }
+
+        .intro-source-link a {
+            color: var(--uces-dark);
+            font-weight: 700;
+            text-decoration: none;
+            border-bottom: 1px solid rgba(0, 143, 99, .35);
         }
 
         .memory-grid {
@@ -1369,15 +1382,21 @@ def introduction_view() -> None:
         "Inicio",
         "Introducción",
     )
-    image_path = Path(__file__).parent / "02_Imagenes" / "01_introduccion.png"
+    image_path = Path(__file__).parent / "02_Imagenes" / "01_introduccion_sin_footer.png"
     if not image_path.exists():
-        st.error("No se encontró la imagen de introducción en 02_Imagenes/01_introduccion.png.")
+        st.error("No se encontró la imagen de introducción en 02_Imagenes/01_introduccion_sin_footer.png.")
         return
     encoded = base64.b64encode(image_path.read_bytes()).decode("ascii")
     st.markdown(
         f"""
         <div class="intro-image-only">
             <img src="data:image/png;base64,{encoded}" alt="Introducción al caso CrowdStrike">
+        </div>
+        <div class="intro-source-link">
+            Fuente:
+            <a href="https://www.messageware.com/what-caused-the-crowdstrike-outage-a-detailed-breakdown/" target="_blank" rel="noopener noreferrer">
+                Messageware - What caused the CrowdStrike outage
+            </a>
         </div>
         """,
         unsafe_allow_html=True,
