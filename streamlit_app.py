@@ -1382,9 +1382,9 @@ def introduction_view() -> None:
         "Inicio",
         "Introducción",
     )
-    image_path = Path(__file__).parent / "02_Imagenes" / "01_introduccion_sin_footer.png"
+    image_path = Path(__file__).parent / "02_Imagenes" / "03_introduccion_sin_footer.png"
     if not image_path.exists():
-        st.error("No se encontró la imagen de introducción en 02_Imagenes/01_introduccion_sin_footer.png.")
+        st.error("No se encontró la imagen de introducción en 02_Imagenes/03_introduccion_sin_footer.png.")
         return
     encoded = base64.b64encode(image_path.read_bytes()).decode("ascii")
     st.markdown(
