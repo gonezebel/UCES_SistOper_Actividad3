@@ -1822,46 +1822,38 @@ def virtual_memory_view() -> None:
     )
 
 
-def page_faults_view() -> None:
-    phase_header("Fase 3", "7. Fallos de página")
-    refs_text = st.text_input("Secuencia de referencias", value="7, 0, 1, 2, 0, 3, 0, 4, 2, 3")
-    frame_count = st.slider("Marcos disponibles", 2, 6, 3)
-    refs = references_from_text(refs_text)
-    history = page_replacement_history(refs, frame_count, "FIFO")
-    faults = sum(1 for item in history if item["fault"])
-    st.markdown(
-        '<div class="part2-grid">'
-        + mini_card("Fallo de página", "Ocurre cuando el proceso necesita una página que no está cargada en RAM.")
-        + mini_card("Víctima", "Si no hay marcos libres, el SO decide qué página sale para hacer lugar.")
-        + mini_card("Impacto", f"Con esta secuencia aparecen {faults} fallos usando FIFO como criterio base.")
-        + "</div>",
-        unsafe_allow_html=True,
+def page_replacement_view() -> None:
+    phase_header("Fase 3", "7. Reemplazo de páginas")
+    context_card(
+        "Decisión ante un fallo de página",
+        "<b>Cuando una página requerida no está en RAM y no hay marcos libres, el sistema operativo debe elegir una víctima.</b>",
+        "La política de reemplazo define qué página sale al disco para cargar la página que el render o el examen necesita ahora.",
+        "El objetivo es reducir fallos y sostener rendimiento sin exigir más RAM física.",
     )
-    st.markdown(render_page_history_table(history, frame_count), unsafe_allow_html=True)
-
-
-def replacement_algorithms_view() -> None:
-    phase_header("Parte 2", "FIFO, LRU y Clock")
-    refs_text = st.text_input("Referencias para comparar", value="1, 2, 3, 1, 4, 5, 1, 2, 3, 4")
-    frame_count = st.slider("Cantidad de marcos", 2, 5, 3)
-    algorithm = st.selectbox("Algoritmo", ["FIFO", "LRU", "Clock"])
+    left, middle, right = st.columns([1.4, .85, .9])
+    with left:
+        refs_text = st.text_input("Secuencia de referencias", value="1, 2, 3, 1, 4, 5, 1, 2, 3, 4")
+    with middle:
+        frame_count = st.slider("Marcos disponibles", 2, 5, 3)
+    with right:
+        algorithm = st.selectbox("Algoritmo", ["FIFO", "LRU", "Clock"])
     refs = references_from_text(refs_text)
     history = page_replacement_history(refs, frame_count, algorithm)
     faults = sum(1 for item in history if item["fault"])
+    hits = max(0, len(history) - faults)
     descriptions = {
-        "FIFO": "Elimina la página que lleva más tiempo cargada, aunque se haya usado recientemente.",
-        "LRU": "Elimina la página menos usada recientemente, buscando conservar lo que todavía parece útil.",
-        "Clock": "Recorre los marcos con un puntero y usa un bit de referencia para dar segunda oportunidad.",
+        "FIFO": "Elimina la página que lleva más tiempo cargada. Es simple, pero puede sacar páginas todavía activas.",
+        "LRU": "Descarta la menos usada recientemente. Suele reducir fallos, aunque exige registrar accesos.",
+        "Clock": "Mejora FIFO con un bit de referencia: da segunda oportunidad a páginas usadas con frecuencia.",
     }
     st.markdown(
         '<div class="part2-grid">'
-        + mini_card("FIFO", "Simple: cola de llegada. Puede sacar una página activa si entró hace mucho.")
-        + mini_card("LRU", "Más preciso: mira uso reciente. Requiere registrar accesos.")
-        + mini_card("Clock", "Equilibrado: aproxima LRU con bajo costo usando bits de referencia.")
+        + mini_card("Fallo de página", "La página pedida no está en RAM; se debe traer desde disco.")
+        + mini_card("Aciertos / fallos", f"{hits} aciertos y {faults} fallos en la secuencia ingresada.")
+        + mini_card("Criterio aplicado", f"{algorithm}: {descriptions[algorithm]}")
         + "</div>",
         unsafe_allow_html=True,
     )
-    context_card("Lectura del algoritmo seleccionado", f"<b>{algorithm}:</b> {descriptions[algorithm]}", f"En la secuencia ingresada genera {faults} fallos de página.", "")
     if history:
         last = history[-1]
         frames = last["frames"]
@@ -2208,8 +2200,7 @@ def sidebar() -> str:
                 "Fase 2 / 3. Paginación",
                 "Fase 2 / 4. MMU",
                 "Fase 3 / 6. Memoria virtual",
-                "Fase 3 / 7. Fallos de página",
-                "Parte 2 / FIFO, LRU y Clock",
+                "Fase 3 / 7. Reemplazo de páginas",
                 "Fase 4 / 8. Round Robin",
                 "Parte 2 / Round Robin en servidor",
                 "Parte 2 / Semáforos y carrera",
@@ -2247,10 +2238,8 @@ def main() -> None:
         mmu_view()
     elif section == "Fase 3 / 6. Memoria virtual":
         virtual_memory_view()
-    elif section == "Fase 3 / 7. Fallos de página":
-        page_faults_view()
-    elif section == "Parte 2 / FIFO, LRU y Clock":
-        replacement_algorithms_view()
+    elif section == "Fase 3 / 7. Reemplazo de páginas":
+        page_replacement_view()
     elif section == "Fase 4 / 8. Round Robin":
         round_robin_view()
     elif section == "Parte 2 / Round Robin en servidor":
