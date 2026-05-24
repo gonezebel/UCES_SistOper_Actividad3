@@ -949,8 +949,245 @@ def inject_css() -> None:
             margin-bottom: .65rem;
         }
 
+        .part2-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: .65rem;
+            margin: .75rem 0;
+        }
+
+        .part2-card {
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: #fff;
+            padding: .78rem .82rem;
+            min-height: 118px;
+        }
+
+        .part2-card strong {
+            display: block;
+            color: var(--uces-dark);
+            font-size: .82rem;
+            text-transform: uppercase;
+            margin-bottom: .28rem;
+        }
+
+        .part2-card p {
+            margin: 0;
+            color: var(--muted);
+            font-size: .86rem;
+            line-height: 1.34;
+        }
+
+        .demand-map {
+            display: grid;
+            grid-template-columns: 1.1fr .7fr 1.1fr;
+            gap: .65rem;
+            align-items: stretch;
+            margin-top: .75rem;
+        }
+
+        .demand-zone {
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: #fff;
+            padding: .85rem;
+        }
+
+        .demand-zone strong {
+            display: block;
+            color: var(--ink);
+            margin-bottom: .45rem;
+        }
+
+        .terminal-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: .34rem;
+        }
+
+        .terminal-node, .request-node {
+            border: 1px solid var(--line);
+            border-radius: 6px;
+            padding: .45rem .35rem;
+            text-align: center;
+            background: var(--soft);
+            font-size: .75rem;
+            color: var(--ink);
+            font-weight: 800;
+        }
+
+        .terminal-node.hot, .request-node.hot {
+            background: #fde7e3;
+            border-color: #e7aaa3;
+        }
+
+        .flow-arrow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--uces-dark);
+            font-weight: 850;
+            font-size: 1.35rem;
+            min-height: 150px;
+        }
+
+        .resource-bars {
+            display: grid;
+            gap: .45rem;
+            margin-top: .65rem;
+        }
+
+        .resource-bar {
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            overflow: hidden;
+            background: #f8faf9;
+        }
+
+        .resource-fill {
+            height: 28px;
+            display: flex;
+            align-items: center;
+            padding-left: .55rem;
+            color: #fff;
+            font-weight: 850;
+            font-size: .76rem;
+            min-width: 86px;
+        }
+
+        .swap-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: .65rem;
+            margin-top: .75rem;
+        }
+
+        .swap-box {
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            padding: .75rem;
+            background: #fff;
+        }
+
+        .swap-box strong {
+            color: var(--ink);
+            display: block;
+            margin-bottom: .35rem;
+        }
+
+        .page-pill-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: .3rem;
+        }
+
+        .page-pill {
+            border: 1px solid var(--line);
+            border-radius: 999px;
+            padding: .18rem .46rem;
+            background: var(--soft);
+            color: var(--ink);
+            font-size: .74rem;
+            font-weight: 800;
+        }
+
+        .page-pill.disk {
+            background: #fff4cf;
+            border-color: #e6c96d;
+        }
+
+        .page-pill.fault {
+            background: #fde7e3;
+            border-color: #e7aaa3;
+        }
+
+        .page-table-wrap {
+            overflow-x: auto;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            margin-top: .75rem;
+            background: #fff;
+        }
+
+        .page-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: .78rem;
+        }
+
+        .page-table th, .page-table td {
+            border-bottom: 1px solid var(--line);
+            padding: .45rem .5rem;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        .page-table th {
+            color: var(--uces-dark);
+            background: var(--uces-light);
+            font-weight: 850;
+        }
+
+        .page-table td:first-child, .page-table th:first-child {
+            text-align: left;
+        }
+
+        .fault-yes {
+            color: #b5443a;
+            font-weight: 850;
+        }
+
+        .fault-no {
+            color: var(--uces-dark);
+            font-weight: 850;
+        }
+
+        .clock-ring {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: .45rem;
+            margin-top: .6rem;
+        }
+
+        .clock-slot {
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: #fff;
+            padding: .55rem;
+            text-align: center;
+        }
+
+        .clock-slot.pointer {
+            border-color: var(--uces-green);
+            box-shadow: inset 0 0 0 2px rgba(0, 140, 90, .18);
+        }
+
+        .race-demo {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: .65rem;
+            margin-top: .75rem;
+        }
+
+        .critical-file {
+            border: 2px solid var(--uces-green);
+            border-radius: 8px;
+            padding: .85rem;
+            background: #fbfffd;
+            color: var(--ink);
+            font-weight: 850;
+            text-align: center;
+            margin-top: .55rem;
+        }
+
+        .conflict-file {
+            border-color: var(--danger);
+            background: #fffafa;
+        }
+
         @media (max-width: 900px) {
-            .kpi-grid, .icon-strip, .mini-grid, .pipeline, .isolation-layout, .mmu-flow, .mmu-cases, .rr-layout {grid-template-columns: 1fr;}
+            .kpi-grid, .icon-strip, .mini-grid, .pipeline, .isolation-layout, .mmu-flow, .mmu-cases, .rr-layout, .part2-grid, .demand-map, .swap-layout, .race-demo {grid-template-columns: 1fr;}
             .memory-grid {grid-template-columns: repeat(4, 1fr);}
             .process-map {grid-template-columns: repeat(2, 1fr);}
             .pipeline:before, .pipeline:after, .mmu-node:not(:last-child)::after {display: none;}
@@ -1377,6 +1614,338 @@ def rr_quantum_reading(quantum: int) -> str:
     return "Quantum equilibrado: reparte CPU sin generar demasiados cambios de turno ni esperas largas."
 
 
+def bounded_percent(value: float) -> int:
+    return max(0, min(100, int(value)))
+
+
+def references_from_text(text: str) -> list[int]:
+    refs: list[int] = []
+    for item in text.replace(";", ",").split(","):
+        item = item.strip()
+        if item:
+            try:
+                refs.append(int(item))
+            except ValueError:
+                continue
+    return refs
+
+
+def page_replacement_history(references: list[int], frame_count: int, algorithm: str) -> list[dict[str, object]]:
+    frames: list[int | None] = [None] * frame_count
+    loaded_at: dict[int, int] = {}
+    last_used: dict[int, int] = {}
+    ref_bits: dict[int, int] = {}
+    pointer = 0
+    history: list[dict[str, object]] = []
+
+    for step, page in enumerate(references, start=1):
+        fault = page not in frames
+        victim = None
+        if fault:
+            if None in frames:
+                idx = frames.index(None)
+            elif algorithm == "FIFO":
+                victim = min((p for p in frames if p is not None), key=lambda p: loaded_at.get(p, 0))
+                idx = frames.index(victim)
+            elif algorithm == "LRU":
+                victim = min((p for p in frames if p is not None), key=lambda p: last_used.get(p, 0))
+                idx = frames.index(victim)
+            else:
+                while True:
+                    candidate = frames[pointer]
+                    if candidate is None:
+                        idx = pointer
+                        break
+                    if ref_bits.get(candidate, 0) == 0:
+                        victim = candidate
+                        idx = pointer
+                        break
+                    ref_bits[candidate] = 0
+                    pointer = (pointer + 1) % frame_count
+                pointer = (idx + 1) % frame_count
+
+            if victim is not None:
+                loaded_at.pop(victim, None)
+                last_used.pop(victim, None)
+                ref_bits.pop(victim, None)
+            frames[idx] = page
+            loaded_at[page] = step
+            ref_bits[page] = 1
+        else:
+            ref_bits[page] = 1
+        last_used[page] = step
+        history.append(
+            {
+                "step": step,
+                "page": page,
+                "frames": frames.copy(),
+                "fault": fault,
+                "victim": victim,
+                "pointer": pointer,
+                "bits": ref_bits.copy(),
+            }
+        )
+    return history
+
+
+def render_page_history_table(history: list[dict[str, object]], frame_count: int) -> str:
+    rows = []
+    for item in history:
+        frames = item["frames"]
+        cells = "".join(f"<td>{frame if frame is not None else '-'}</td>" for frame in frames)
+        status = '<span class="fault-yes">Fallo</span>' if item["fault"] else '<span class="fault-no">Acierto</span>'
+        victim = item["victim"] if item["victim"] is not None else "-"
+        rows.append(
+            "<tr>"
+            f"<td>{item['step']}</td>"
+            f"<td><b>{item['page']}</b></td>"
+            + cells
+            + f"<td>{status}</td><td>{victim}</td>"
+            "</tr>"
+        )
+    frame_headers = "".join(f"<th>Marco {i + 1}</th>" for i in range(frame_count))
+    return (
+        '<div class="page-table-wrap"><table class="page-table">'
+        f"<thead><tr><th>Paso</th><th>Pagina</th>{frame_headers}<th>Resultado</th><th>Sale</th></tr></thead>"
+        f"<tbody>{''.join(rows)}</tbody></table></div>"
+    )
+
+
+def part2_context_view() -> None:
+    phase_header("Parte 2", "Contexto de alta demanda y concurrencia")
+    context_card(
+        "Semana de entregas finales",
+        "<b>El aula combina renders 3D pesados con examenes online que envian respuestas al servidor central.</b>",
+        "Si todos los alumnos trabajan al mismo tiempo, la presion aparece en dos lugares: RAM de las terminales y cola de peticiones del servidor.",
+        "La solucion debe sostener continuidad, equidad y consistencia de datos.",
+    )
+    students = st.slider("Cantidad de alumnos activos", 5, 40, 24)
+    render_weight = st.slider("Peso promedio del render", 1, 10, 7)
+    ram_pressure = bounded_percent((students * render_weight) / 3)
+    server_pressure = bounded_percent(students * 2.1)
+    risk_class = "hot" if ram_pressure > 75 else ""
+    terminals = "".join(f'<div class="terminal-node {risk_class}">PC {i + 1}</div>' for i in range(min(students, 16)))
+    requests = "".join(f'<div class="request-node {"hot" if server_pressure > 70 else ""}">Req {i + 1}</div>' for i in range(min(students, 12)))
+    st.markdown(
+        f"""
+        <div class="demand-map">
+            <div class="demand-zone">
+                <strong>Terminales de alumnos</strong>
+                <div class="terminal-grid">{terminals}</div>
+                <div class="resource-bars">
+                    <div class="resource-bar"><div class="resource-fill" style="width:{ram_pressure}%; background:#008c5a;">RAM {ram_pressure}%</div></div>
+                </div>
+            </div>
+            <div class="flow-arrow">envios simultaneos -></div>
+            <div class="demand-zone">
+                <strong>Servidor central</strong>
+                <div class="terminal-grid">{requests}</div>
+                <div class="resource-bars">
+                    <div class="resource-bar"><div class="resource-fill" style="width:{server_pressure}%; background:#2f6f9f;">cola {server_pressure}%</div></div>
+                </div>
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+    st.markdown(
+        '<div class="part2-grid">'
+        + mini_card("Riesgo de memoria", "El render puede superar la RAM fisica y obligar al sistema a usar memoria virtual.")
+        + mini_card("Riesgo de equidad", "Un envio pesado no debe bloquear las respuestas del resto de los alumnos.")
+        + mini_card("Riesgo de datos", "Las notas no pueden escribirse en el archivo central sin control de concurrencia.")
+        + "</div>",
+        unsafe_allow_html=True,
+    )
+
+
+def virtual_memory_view() -> None:
+    phase_header("Parte 2", "Memoria virtual y swapping")
+    ram = st.slider("RAM fisica disponible (marcos)", 4, 16, 8)
+    demanded = st.slider("Paginas demandadas por el render", 6, 28, 18)
+    in_ram = min(ram, demanded)
+    in_swap = max(0, demanded - ram)
+    swap_percent = bounded_percent((in_swap / demanded) * 100 if demanded else 0)
+    ram_pages = "".join(f'<span class="page-pill">P{i + 1}</span>' for i in range(in_ram))
+    swap_pages = "".join(f'<span class="page-pill disk">P{i + 1 + in_ram}</span>' for i in range(in_swap))
+    performance = max(25, 100 - swap_percent)
+    st.markdown(
+        f"""
+        <div class="swap-layout">
+            <div class="swap-box">
+                <strong>Proceso de render</strong>
+                <p>Solicita {demanded} paginas para texturas, geometria y buffers temporales.</p>
+            </div>
+            <div class="swap-box">
+                <strong>RAM fisica</strong>
+                <div class="page-pill-row">{ram_pages}</div>
+            </div>
+            <div class="swap-box">
+                <strong>Swap en disco</strong>
+                <div class="page-pill-row">{swap_pages if swap_pages else '<span class="page-pill">sin uso</span>'}</div>
+            </div>
+        </div>
+        <div class="resource-bars">
+            <div class="resource-bar"><div class="resource-fill" style="width:{performance}%; background:#008c5a;">rendimiento estimado {performance}%</div></div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+    pipeline(
+        [
+            ("1. Pedido", "El render solicita una pagina virtual."),
+            ("2. Verificacion", "El SO revisa si esta en RAM."),
+            ("3. Swap", "Si falta espacio, mueve paginas menos urgentes al disco."),
+            ("4. Continuidad", "La terminal sigue funcionando, aunque con costo de rendimiento."),
+        ]
+    )
+
+
+def page_faults_view() -> None:
+    phase_header("Parte 2", "Fallos de pagina y reemplazo")
+    refs_text = st.text_input("Secuencia de referencias", value="7, 0, 1, 2, 0, 3, 0, 4, 2, 3")
+    frame_count = st.slider("Marcos disponibles", 2, 6, 3)
+    refs = references_from_text(refs_text)
+    history = page_replacement_history(refs, frame_count, "FIFO")
+    faults = sum(1 for item in history if item["fault"])
+    st.markdown(
+        '<div class="part2-grid">'
+        + mini_card("Fallo de pagina", "Ocurre cuando el proceso necesita una pagina que no esta cargada en RAM.")
+        + mini_card("Victima", "Si no hay marcos libres, el SO decide que pagina sale para hacer lugar.")
+        + mini_card("Impacto", f"Con esta secuencia aparecen {faults} fallos usando FIFO como criterio base.")
+        + "</div>",
+        unsafe_allow_html=True,
+    )
+    st.markdown(render_page_history_table(history, frame_count), unsafe_allow_html=True)
+
+
+def replacement_algorithms_view() -> None:
+    phase_header("Parte 2", "FIFO, LRU y Clock")
+    refs_text = st.text_input("Referencias para comparar", value="1, 2, 3, 1, 4, 5, 1, 2, 3, 4")
+    frame_count = st.slider("Cantidad de marcos", 2, 5, 3)
+    algorithm = st.selectbox("Algoritmo", ["FIFO", "LRU", "Clock"])
+    refs = references_from_text(refs_text)
+    history = page_replacement_history(refs, frame_count, algorithm)
+    faults = sum(1 for item in history if item["fault"])
+    descriptions = {
+        "FIFO": "Elimina la pagina que lleva mas tiempo cargada, aunque se haya usado recientemente.",
+        "LRU": "Elimina la pagina menos usada recientemente, buscando conservar lo que todavia parece util.",
+        "Clock": "Recorre los marcos con un puntero y usa un bit de referencia para dar segunda oportunidad.",
+    }
+    st.markdown(
+        '<div class="part2-grid">'
+        + mini_card("FIFO", "Simple: cola de llegada. Puede sacar una pagina activa si entro hace mucho.")
+        + mini_card("LRU", "Mas preciso: mira uso reciente. Requiere registrar accesos.")
+        + mini_card("Clock", "Equilibrado: aproxima LRU con bajo costo usando bits de referencia.")
+        + "</div>",
+        unsafe_allow_html=True,
+    )
+    context_card("Lectura del algoritmo seleccionado", f"<b>{algorithm}:</b> {descriptions[algorithm]}", f"En la secuencia ingresada genera {faults} fallos de pagina.", "")
+    if history:
+        last = history[-1]
+        frames = last["frames"]
+        bits = last["bits"]
+        pointer = last["pointer"]
+        slots = "".join(
+            f'<div class="clock-slot {"pointer" if i == pointer else ""}"><b>{frame if frame is not None else "-"}</b><br><small>R={bits.get(frame, 0) if frame is not None else "-"}</small></div>'
+            for i, frame in enumerate(frames)
+        )
+        st.markdown(f'<div class="clock-ring">{slots}</div>', unsafe_allow_html=True)
+    st.markdown(render_page_history_table(history, frame_count), unsafe_allow_html=True)
+
+
+def server_round_robin_view() -> None:
+    phase_header("Parte 2", "Round Robin en el servidor de examenes")
+    context_card(
+        "Procesamiento equitativo",
+        "<b>El servidor atiende peticiones por turnos de quantum fijo.</b>",
+        "Si un alumno envia una respuesta muy pesada, usa un turno y vuelve a la cola; no bloquea a los envios livianos.",
+        "La equidad mejora, aunque un quantum demasiado bajo aumenta cambios de contexto.",
+    )
+    left, right = st.columns(2)
+    with left:
+        quantum = st.slider("Quantum del servidor", 1, 6, 2)
+        a1 = st.slider("Alumno A", 1, 12, 4)
+        a2 = st.slider("Alumno B", 1, 12, 9)
+    with right:
+        a3 = st.slider("Alumno C", 1, 12, 3)
+        a4 = st.slider("Alumno D", 1, 12, 7)
+    processes = [Process("Alumno A", a1), Process("Alumno B", a2), Process("Alumno C", a3), Process("Alumno D", a4)]
+    timeline, completion = rr_schedule(processes, quantum)
+    st.markdown(
+        '<div class="rr-layout">'
+        + rr_results_table(processes, timeline, completion)
+        + '<div class="rr-note-stack">'
+        + mini_card("Cola de peticiones", "Cada alumno recibe tiempo de servidor aunque otros envios sigan incompletos.")
+        + mini_card("Quantum", rr_quantum_reading(quantum))
+        + mini_card("Resultado", "El servidor evita trato injusto y mantiene avance visible para todos.")
+        + "</div></div>",
+        unsafe_allow_html=True,
+    )
+
+
+def synchronization_view() -> None:
+    phase_header("Parte 2", "Semaforos y condiciones de carrera")
+    use_semaphore = st.toggle("Usar semaforo para el archivo de calificaciones", value=True)
+    students = st.slider("Alumnos escribiendo notas a la vez", 2, 6, 4)
+    requests = "".join(f'<div class="request-node {"hot" if not use_semaphore else ""}">Alumno {i + 1}</div>' for i in range(students))
+    if use_semaphore:
+        result_class = ""
+        result = "Archivo consistente: una escritura entra a la seccion critica y las demas esperan turno."
+        left_title = "Con semaforo"
+        right_title = "Cola ordenada"
+    else:
+        result_class = "conflict-file"
+        result = "Condicion de carrera: dos escrituras pueden pisarse y dejar una nota perdida o inconsistente."
+        left_title = "Sin sincronizacion"
+        right_title = "Escrituras superpuestas"
+    st.markdown(
+        f"""
+        <div class="race-demo">
+            <div class="demand-zone">
+                <strong>{left_title}</strong>
+                <div class="terminal-grid">{requests}</div>
+            </div>
+            <div class="demand-zone">
+                <strong>{right_title}</strong>
+                <div class="critical-file {result_class}">{result}</div>
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+    st.markdown(
+        '<div class="part2-grid">'
+        + mini_card("Seccion critica", "Es la zona donde se escribe el archivo compartido de calificaciones.")
+        + mini_card("Semaforo/mutex", "Permite que un solo proceso escriba mientras los demas esperan.")
+        + mini_card("Problema evitado", "La condicion de carrera, donde el resultado depende del orden accidental de ejecucion.")
+        + "</div>",
+        unsafe_allow_html=True,
+    )
+
+
+def part2_closure_view() -> None:
+    phase_header("Parte 2", "Cierre integrador")
+    st.markdown(
+        """
+        <div class="conclusion-main">
+            <strong>Conclusion Parte 2</strong>
+            La memoria virtual permite sostener renders cuando la RAM fisica no alcanza; los algoritmos de reemplazo
+            deciden que paginas salen; Round Robin reparte atencion del servidor; y los semaforos protegen el archivo
+            central de calificaciones frente a accesos concurrentes.
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+    st.markdown(
+        '<div class="part2-grid">'
+        + mini_card("Memoria", "Swapping evita el colapso inmediato, con costo de rendimiento.")
+        + mini_card("Reemplazo", "FIFO, LRU y Clock equilibran simpleza, precision y costo.")
+        + mini_card("Concurrencia", "RR y semaforos sostienen equidad y consistencia de datos.")
+        + "</div>",
+        unsafe_allow_html=True,
+    )
+
+
 def introduction_view() -> None:
     phase_header(
         "Inicio",
@@ -1617,6 +2186,13 @@ def sidebar() -> str:
                 "Fase 2 / 3. Paginación",
                 "Fase 2 / 4. MMU",
                 "Fase 3 / 5. Round Robin",
+                "Parte 2 / Contexto de alta demanda",
+                "Parte 2 / Memoria virtual y swapping",
+                "Parte 2 / Fallos de página",
+                "Parte 2 / FIFO, LRU y Clock",
+                "Parte 2 / Round Robin en servidor",
+                "Parte 2 / Semáforos y carrera",
+                "Parte 2 / Cierre integrador",
                 "Conclusión",
             ],
         )
@@ -1650,6 +2226,20 @@ def main() -> None:
         mmu_view()
     elif section == "Fase 3 / 5. Round Robin":
         round_robin_view()
+    elif section == "Parte 2 / Contexto de alta demanda":
+        part2_context_view()
+    elif section == "Parte 2 / Memoria virtual y swapping":
+        virtual_memory_view()
+    elif section == "Parte 2 / Fallos de página":
+        page_faults_view()
+    elif section == "Parte 2 / FIFO, LRU y Clock":
+        replacement_algorithms_view()
+    elif section == "Parte 2 / Round Robin en servidor":
+        server_round_robin_view()
+    elif section == "Parte 2 / Semáforos y carrera":
+        synchronization_view()
+    elif section == "Parte 2 / Cierre integrador":
+        part2_closure_view()
     else:
         board_view()
 
