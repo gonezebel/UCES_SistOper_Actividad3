@@ -1706,7 +1706,7 @@ def render_page_history_table(history: list[dict[str, object]], frame_count: int
     frame_headers = "".join(f"<th>Marco {i + 1}</th>" for i in range(frame_count))
     return (
         '<div class="page-table-wrap"><table class="page-table">'
-        f"<thead><tr><th>Paso</th><th>Pagina</th>{frame_headers}<th>Resultado</th><th>Sale</th></tr></thead>"
+        f"<thead><tr><th>Paso</th><th>Página</th>{frame_headers}<th>Resultado</th><th>Sale</th></tr></thead>"
         f"<tbody>{''.join(rows)}</tbody></table></div>"
     )
 
@@ -1716,9 +1716,9 @@ def virtual_memory_view() -> None:
     st.markdown(
         """
         <div class="conclusion-main">
-            <strong>¿Que es el swapping?</strong>
-            El swapping usa disco como extension temporal de la RAM: mueve paginas menos urgentes fuera de memoria fisica
-            y carga las que el render necesita en ese momento. Asi evita el colapso y mantiene las terminales operativas,
+            <strong>¿Qué es el swapping?</strong>
+            El swapping usa disco como extensión temporal de la RAM: mueve páginas menos urgentes fuera de memoria física
+            y carga las que el render necesita en ese momento. Así evita el colapso y mantiene las terminales operativas,
             aunque con menor velocidad cuando aumenta el uso de disco.
         </div>
         """,
@@ -1731,15 +1731,15 @@ def virtual_memory_view() -> None:
     with c2:
         render_weight = st.slider("Peso render", 1, 10, 7)
     with c3:
-        ram = st.slider("RAM fisica", 4, 16, 8)
+        ram = st.slider("RAM física", 4, 16, 8)
     with c4:
-        demanded = st.slider("Paginas render", 6, 28, 18)
+        demanded = st.slider("Páginas render", 6, 28, 18)
     with c5:
-        algorithm = st.selectbox("Metodo", ["FIFO", "LRU", "Clock"])
+        algorithm = st.selectbox("Método", ["FIFO", "LRU", "Clock"])
 
     algorithm_data = {
         "FIFO": {
-            "desc": "Saca la pagina mas antigua en RAM.",
+            "desc": "Saca la página más antigua en RAM.",
             "factor": 1.08,
             "color": "#2f6f9f",
         },
@@ -1749,7 +1749,7 @@ def virtual_memory_view() -> None:
             "color": "#008c5a",
         },
         "Clock": {
-            "desc": "Da segunda oportunidad a paginas usadas.",
+            "desc": "Da segunda oportunidad a páginas usadas.",
             "factor": .94,
             "color": "#6c7a31",
         },
@@ -1761,23 +1761,23 @@ def virtual_memory_view() -> None:
     base_faults = max(0, demanded - ram) + max(0, int((students * render_weight) / 18))
     estimated_faults = max(0, math.ceil(base_faults * algorithm_data[algorithm]["factor"]))
     performance = max(18, bounded_percent(100 - (swap_percent * .55) - (estimated_faults * 2.1) - max(0, pressure - 80) * .25))
-    continuity = "Operativo" if performance >= 55 else "Degradado" if performance >= 32 else "Critico"
+    continuity = "Operativo" if performance >= 55 else "Degradado" if performance >= 32 else "Crítico"
     if in_swap == 0:
         scenario_title = "Escenario sin swap"
-        scenario_body = "La RAM alcanza para el render. El sistema no necesita mover paginas al disco y el aula mantiene respuesta estable."
+        scenario_body = "La RAM alcanza para el render. El sistema no necesita mover páginas al disco y el aula mantiene respuesta estable."
     elif performance >= 60:
         scenario_title = "Escenario controlado"
         scenario_body = "Hay swapping, pero la carga sigue administrable. El sistema gana margen de memoria sin comprometer la clase."
     elif performance >= 35:
         scenario_title = "Escenario degradado"
-        scenario_body = "El disco empieza a sostener una parte relevante de la memoria. La terminal no colapsa, pero el render y el examen pueden sentirse mas lentos."
+        scenario_body = "El disco empieza a sostener una parte relevante de la memoria. La terminal no colapsa, pero el render y el examen pueden sentirse más lentos."
     else:
         scenario_title = "Escenario critico"
-        scenario_body = "La presion supera el margen razonable. El swapping evita la caida inmediata, pero conviene reducir renders simultaneos o ampliar RAM."
+        scenario_body = "La presión supera el margen razonable. El swapping evita la caída inmediata, pero conviene reducir renders simultáneos o ampliar RAM."
     algorithm_note = {
-        "FIFO": "FIFO es simple, pero puede sacar paginas que todavia se usan si llevan mucho tiempo cargadas.",
-        "LRU": "LRU suele reducir fallos porque conserva las paginas usadas recientemente.",
-        "Clock": "Clock equilibra costo y precision dando una segunda oportunidad a paginas activas.",
+        "FIFO": "FIFO es simple, pero puede sacar páginas que todavía se usan si llevan mucho tiempo cargadas.",
+        "LRU": "LRU suele reducir fallos porque conserva las páginas usadas recientemente.",
+        "Clock": "Clock equilibra costo y precisión dando una segunda oportunidad a páginas activas.",
     }[algorithm]
     ram_pages = "".join(f'<span class="page-pill">P{i + 1}</span>' for i in range(min(in_ram, 10)))
     if in_ram > 10:
@@ -1789,32 +1789,32 @@ def virtual_memory_view() -> None:
     st.markdown(
         f"""
         <div class="part2-grid">
-            {mini_card("Metodo seleccionado", f"{algorithm}: {algorithm_data[algorithm]['desc']}")}
+            {mini_card("Método seleccionado", f"{algorithm}: {algorithm_data[algorithm]['desc']}")}
             {mini_card("Fallos estimados", f"{estimated_faults} eventos de carga desde disco para sostener el render.")}
             {mini_card("Estado del aula", f"{continuity}: rendimiento estimado {performance}%.")}
         </div>
         <div class="swap-layout">
             <div class="swap-box">
                 <strong>Demanda total</strong>
-                <p>{students} alumnos x peso {render_weight}: presion de memoria {pressure}%.</p>
-                <div class="resource-bar"><div class="resource-fill" style="width:{pressure}%; background:#e06a5f;">presion {pressure}%</div></div>
+                <p>{students} alumnos x peso {render_weight}: presión de memoria {pressure}%.</p>
+                <div class="resource-bar"><div class="resource-fill" style="width:{pressure}%; background:#e06a5f;">presión {pressure}%</div></div>
             </div>
             <div class="swap-box">
-                <strong>RAM fisica</strong>
+                <strong>RAM física</strong>
                 <div class="page-pill-row">{ram_pages}</div>
-                <div class="resource-bar"><div class="resource-fill" style="width:{bounded_percent((in_ram / demanded) * 100)}%; background:#008c5a;">{in_ram} paginas</div></div>
+                <div class="resource-bar"><div class="resource-fill" style="width:{bounded_percent((in_ram / demanded) * 100)}%; background:#008c5a;">{in_ram} páginas</div></div>
             </div>
             <div class="swap-box">
                 <strong>Swap en disco</strong>
                 <div class="page-pill-row">{swap_pages if swap_pages else '<span class="page-pill">sin uso</span>'}</div>
-                <div class="resource-bar"><div class="resource-fill" style="width:{swap_percent}%; background:{algorithm_data[algorithm]['color']};">{in_swap} paginas</div></div>
+                <div class="resource-bar"><div class="resource-fill" style="width:{swap_percent}%; background:{algorithm_data[algorithm]['color']};">{in_swap} páginas</div></div>
             </div>
         </div>
         <div class="resource-bars">
             <div class="resource-bar"><div class="resource-fill" style="width:{performance}%; background:{algorithm_data[algorithm]['color']};">rendimiento {performance}%</div></div>
         </div>
         <div class="conclusion-main">
-            <strong>Descripcion de escenario</strong>
+            <strong>Descripción de escenario</strong>
             {scenario_title}: {scenario_body} {algorithm_note}
         </div>
         """,
@@ -1823,7 +1823,7 @@ def virtual_memory_view() -> None:
 
 
 def page_faults_view() -> None:
-    phase_header("Parte 2", "Fallos de pagina y reemplazo")
+    phase_header("Fase 3", "7. Fallos de página")
     refs_text = st.text_input("Secuencia de referencias", value="7, 0, 1, 2, 0, 3, 0, 4, 2, 3")
     frame_count = st.slider("Marcos disponibles", 2, 6, 3)
     refs = references_from_text(refs_text)
@@ -1831,8 +1831,8 @@ def page_faults_view() -> None:
     faults = sum(1 for item in history if item["fault"])
     st.markdown(
         '<div class="part2-grid">'
-        + mini_card("Fallo de pagina", "Ocurre cuando el proceso necesita una pagina que no esta cargada en RAM.")
-        + mini_card("Victima", "Si no hay marcos libres, el SO decide que pagina sale para hacer lugar.")
+        + mini_card("Fallo de página", "Ocurre cuando el proceso necesita una página que no está cargada en RAM.")
+        + mini_card("Víctima", "Si no hay marcos libres, el SO decide qué página sale para hacer lugar.")
         + mini_card("Impacto", f"Con esta secuencia aparecen {faults} fallos usando FIFO como criterio base.")
         + "</div>",
         unsafe_allow_html=True,
@@ -1849,19 +1849,19 @@ def replacement_algorithms_view() -> None:
     history = page_replacement_history(refs, frame_count, algorithm)
     faults = sum(1 for item in history if item["fault"])
     descriptions = {
-        "FIFO": "Elimina la pagina que lleva mas tiempo cargada, aunque se haya usado recientemente.",
-        "LRU": "Elimina la pagina menos usada recientemente, buscando conservar lo que todavia parece util.",
+        "FIFO": "Elimina la página que lleva más tiempo cargada, aunque se haya usado recientemente.",
+        "LRU": "Elimina la página menos usada recientemente, buscando conservar lo que todavía parece útil.",
         "Clock": "Recorre los marcos con un puntero y usa un bit de referencia para dar segunda oportunidad.",
     }
     st.markdown(
         '<div class="part2-grid">'
-        + mini_card("FIFO", "Simple: cola de llegada. Puede sacar una pagina activa si entro hace mucho.")
-        + mini_card("LRU", "Mas preciso: mira uso reciente. Requiere registrar accesos.")
+        + mini_card("FIFO", "Simple: cola de llegada. Puede sacar una página activa si entró hace mucho.")
+        + mini_card("LRU", "Más preciso: mira uso reciente. Requiere registrar accesos.")
         + mini_card("Clock", "Equilibrado: aproxima LRU con bajo costo usando bits de referencia.")
         + "</div>",
         unsafe_allow_html=True,
     )
-    context_card("Lectura del algoritmo seleccionado", f"<b>{algorithm}:</b> {descriptions[algorithm]}", f"En la secuencia ingresada genera {faults} fallos de pagina.", "")
+    context_card("Lectura del algoritmo seleccionado", f"<b>{algorithm}:</b> {descriptions[algorithm]}", f"En la secuencia ingresada genera {faults} fallos de página.", "")
     if history:
         last = history[-1]
         frames = last["frames"]
@@ -1951,8 +1951,8 @@ def part2_closure_view() -> None:
         """
         <div class="conclusion-main">
             <strong>Conclusion Parte 2</strong>
-            La memoria virtual permite sostener renders cuando la RAM fisica no alcanza; los algoritmos de reemplazo
-            deciden que paginas salen; Round Robin reparte atencion del servidor; y los semaforos protegen el archivo
+            La memoria virtual permite sostener renders cuando la RAM física no alcanza; los algoritmos de reemplazo
+            deciden qué páginas salen; Round Robin reparte atención del servidor; y los semáforos protegen el archivo
             central de calificaciones frente a accesos concurrentes.
         </div>
         """,
@@ -2207,10 +2207,10 @@ def sidebar() -> str:
                 "Fase 1 / 2. Aislamiento de Procesos",
                 "Fase 2 / 3. Paginación",
                 "Fase 2 / 4. MMU",
-                "Fase 3 / 5. Round Robin",
                 "Fase 3 / 6. Memoria virtual",
-                "Parte 2 / Fallos de página",
+                "Fase 3 / 7. Fallos de página",
                 "Parte 2 / FIFO, LRU y Clock",
+                "Fase 4 / 8. Round Robin",
                 "Parte 2 / Round Robin en servidor",
                 "Parte 2 / Semáforos y carrera",
                 "Parte 2 / Cierre integrador",
@@ -2245,14 +2245,14 @@ def main() -> None:
         paging_view()
     elif section == "Fase 2 / 4. MMU":
         mmu_view()
-    elif section == "Fase 3 / 5. Round Robin":
-        round_robin_view()
     elif section == "Fase 3 / 6. Memoria virtual":
         virtual_memory_view()
-    elif section == "Parte 2 / Fallos de página":
+    elif section == "Fase 3 / 7. Fallos de página":
         page_faults_view()
     elif section == "Parte 2 / FIFO, LRU y Clock":
         replacement_algorithms_view()
+    elif section == "Fase 4 / 8. Round Robin":
+        round_robin_view()
     elif section == "Parte 2 / Round Robin en servidor":
         server_round_robin_view()
     elif section == "Parte 2 / Semáforos y carrera":
