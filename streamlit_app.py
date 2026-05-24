@@ -1716,7 +1716,7 @@ def virtual_memory_view() -> None:
     st.markdown(
         """
         <div class="conclusion-main">
-            <strong>Respuesta ejecutiva</strong>
+            <strong>¿Que es el swapping?</strong>
             El swapping usa disco como extension temporal de la RAM: mueve paginas menos urgentes fuera de memoria fisica
             y carga las que el render necesita en ese momento. Asi evita el colapso y mantiene las terminales operativas,
             aunque con menor velocidad cuando aumenta el uso de disco.
@@ -1762,6 +1762,23 @@ def virtual_memory_view() -> None:
     estimated_faults = max(0, math.ceil(base_faults * algorithm_data[algorithm]["factor"]))
     performance = max(18, bounded_percent(100 - (swap_percent * .55) - (estimated_faults * 2.1) - max(0, pressure - 80) * .25))
     continuity = "Operativo" if performance >= 55 else "Degradado" if performance >= 32 else "Critico"
+    if in_swap == 0:
+        scenario_title = "Escenario sin swap"
+        scenario_body = "La RAM alcanza para el render. El sistema no necesita mover paginas al disco y el aula mantiene respuesta estable."
+    elif performance >= 60:
+        scenario_title = "Escenario controlado"
+        scenario_body = "Hay swapping, pero la carga sigue administrable. El sistema gana margen de memoria sin comprometer la clase."
+    elif performance >= 35:
+        scenario_title = "Escenario degradado"
+        scenario_body = "El disco empieza a sostener una parte relevante de la memoria. La terminal no colapsa, pero el render y el examen pueden sentirse mas lentos."
+    else:
+        scenario_title = "Escenario critico"
+        scenario_body = "La presion supera el margen razonable. El swapping evita la caida inmediata, pero conviene reducir renders simultaneos o ampliar RAM."
+    algorithm_note = {
+        "FIFO": "FIFO es simple, pero puede sacar paginas que todavia se usan si llevan mucho tiempo cargadas.",
+        "LRU": "LRU suele reducir fallos porque conserva las paginas usadas recientemente.",
+        "Clock": "Clock equilibra costo y precision dando una segunda oportunidad a paginas activas.",
+    }[algorithm]
     ram_pages = "".join(f'<span class="page-pill">P{i + 1}</span>' for i in range(min(in_ram, 10)))
     if in_ram > 10:
         ram_pages += '<span class="page-pill">...</span>'
@@ -1795,6 +1812,10 @@ def virtual_memory_view() -> None:
         </div>
         <div class="resource-bars">
             <div class="resource-bar"><div class="resource-fill" style="width:{performance}%; background:{algorithm_data[algorithm]['color']};">rendimiento {performance}%</div></div>
+        </div>
+        <div class="conclusion-main">
+            <strong>Descripcion de escenario</strong>
+            {scenario_title}: {scenario_body} {algorithm_note}
         </div>
         """,
         unsafe_allow_html=True,
