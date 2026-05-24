@@ -1711,92 +1711,93 @@ def render_page_history_table(history: list[dict[str, object]], frame_count: int
     )
 
 
-def part2_context_view() -> None:
-    phase_header("Parte 2", "Contexto de alta demanda y concurrencia")
-    context_card(
-        "Semana de entregas finales",
-        "<b>El aula combina renders 3D pesados con examenes online que envian respuestas al servidor central.</b>",
-        "Si todos los alumnos trabajan al mismo tiempo, la presion aparece en dos lugares: RAM de las terminales y cola de peticiones del servidor.",
-        "La solucion debe sostener continuidad, equidad y consistencia de datos.",
-    )
-    students = st.slider("Cantidad de alumnos activos", 5, 40, 24)
-    render_weight = st.slider("Peso promedio del render", 1, 10, 7)
-    ram_pressure = bounded_percent((students * render_weight) / 3)
-    server_pressure = bounded_percent(students * 2.1)
-    risk_class = "hot" if ram_pressure > 75 else ""
-    terminals = "".join(f'<div class="terminal-node {risk_class}">PC {i + 1}</div>' for i in range(min(students, 16)))
-    requests = "".join(f'<div class="request-node {"hot" if server_pressure > 70 else ""}">Req {i + 1}</div>' for i in range(min(students, 12)))
+def virtual_memory_view() -> None:
+    phase_header("Fase 3", "6. Memoria virtual")
     st.markdown(
-        f"""
-        <div class="demand-map">
-            <div class="demand-zone">
-                <strong>Terminales de alumnos</strong>
-                <div class="terminal-grid">{terminals}</div>
-                <div class="resource-bars">
-                    <div class="resource-bar"><div class="resource-fill" style="width:{ram_pressure}%; background:#008c5a;">RAM {ram_pressure}%</div></div>
-                </div>
-            </div>
-            <div class="flow-arrow">envios simultaneos -></div>
-            <div class="demand-zone">
-                <strong>Servidor central</strong>
-                <div class="terminal-grid">{requests}</div>
-                <div class="resource-bars">
-                    <div class="resource-bar"><div class="resource-fill" style="width:{server_pressure}%; background:#2f6f9f;">cola {server_pressure}%</div></div>
-                </div>
-            </div>
+        """
+        <div class="conclusion-main">
+            <strong>Respuesta ejecutiva</strong>
+            El swapping usa disco como extension temporal de la RAM: mueve paginas menos urgentes fuera de memoria fisica
+            y carga las que el render necesita en ese momento. Asi evita el colapso y mantiene las terminales operativas,
+            aunque con menor velocidad cuando aumenta el uso de disco.
         </div>
         """,
         unsafe_allow_html=True,
     )
-    st.markdown(
-        '<div class="part2-grid">'
-        + mini_card("Riesgo de memoria", "El render puede superar la RAM fisica y obligar al sistema a usar memoria virtual.")
-        + mini_card("Riesgo de equidad", "Un envio pesado no debe bloquear las respuestas del resto de los alumnos.")
-        + mini_card("Riesgo de datos", "Las notas no pueden escribirse en el archivo central sin control de concurrencia.")
-        + "</div>",
-        unsafe_allow_html=True,
-    )
 
+    c1, c2, c3, c4, c5 = st.columns([1, 1, 1, 1, 1.15])
+    with c1:
+        students = st.slider("Alumnos", 5, 40, 24)
+    with c2:
+        render_weight = st.slider("Peso render", 1, 10, 7)
+    with c3:
+        ram = st.slider("RAM fisica", 4, 16, 8)
+    with c4:
+        demanded = st.slider("Paginas render", 6, 28, 18)
+    with c5:
+        algorithm = st.selectbox("Metodo", ["FIFO", "LRU", "Clock"])
 
-def virtual_memory_view() -> None:
-    phase_header("Parte 2", "Memoria virtual y swapping")
-    ram = st.slider("RAM fisica disponible (marcos)", 4, 16, 8)
-    demanded = st.slider("Paginas demandadas por el render", 6, 28, 18)
+    algorithm_data = {
+        "FIFO": {
+            "desc": "Saca la pagina mas antigua en RAM.",
+            "factor": 1.08,
+            "color": "#2f6f9f",
+        },
+        "LRU": {
+            "desc": "Saca la menos usada recientemente.",
+            "factor": .86,
+            "color": "#008c5a",
+        },
+        "Clock": {
+            "desc": "Da segunda oportunidad a paginas usadas.",
+            "factor": .94,
+            "color": "#6c7a31",
+        },
+    }
+    pressure = bounded_percent((students * render_weight * demanded) / (ram * 6))
     in_ram = min(ram, demanded)
     in_swap = max(0, demanded - ram)
     swap_percent = bounded_percent((in_swap / demanded) * 100 if demanded else 0)
-    ram_pages = "".join(f'<span class="page-pill">P{i + 1}</span>' for i in range(in_ram))
-    swap_pages = "".join(f'<span class="page-pill disk">P{i + 1 + in_ram}</span>' for i in range(in_swap))
-    performance = max(25, 100 - swap_percent)
+    base_faults = max(0, demanded - ram) + max(0, int((students * render_weight) / 18))
+    estimated_faults = max(0, math.ceil(base_faults * algorithm_data[algorithm]["factor"]))
+    performance = max(18, bounded_percent(100 - (swap_percent * .55) - (estimated_faults * 2.1) - max(0, pressure - 80) * .25))
+    continuity = "Operativo" if performance >= 55 else "Degradado" if performance >= 32 else "Critico"
+    ram_pages = "".join(f'<span class="page-pill">P{i + 1}</span>' for i in range(min(in_ram, 10)))
+    if in_ram > 10:
+        ram_pages += '<span class="page-pill">...</span>'
+    swap_pages = "".join(f'<span class="page-pill disk">P{i + 1 + in_ram}</span>' for i in range(min(in_swap, 10)))
+    if in_swap > 10:
+        swap_pages += '<span class="page-pill disk">...</span>'
+
     st.markdown(
         f"""
+        <div class="part2-grid">
+            {mini_card("Metodo seleccionado", f"{algorithm}: {algorithm_data[algorithm]['desc']}")}
+            {mini_card("Fallos estimados", f"{estimated_faults} eventos de carga desde disco para sostener el render.")}
+            {mini_card("Estado del aula", f"{continuity}: rendimiento estimado {performance}%.")}
+        </div>
         <div class="swap-layout">
             <div class="swap-box">
-                <strong>Proceso de render</strong>
-                <p>Solicita {demanded} paginas para texturas, geometria y buffers temporales.</p>
+                <strong>Demanda total</strong>
+                <p>{students} alumnos x peso {render_weight}: presion de memoria {pressure}%.</p>
+                <div class="resource-bar"><div class="resource-fill" style="width:{pressure}%; background:#e06a5f;">presion {pressure}%</div></div>
             </div>
             <div class="swap-box">
                 <strong>RAM fisica</strong>
                 <div class="page-pill-row">{ram_pages}</div>
+                <div class="resource-bar"><div class="resource-fill" style="width:{bounded_percent((in_ram / demanded) * 100)}%; background:#008c5a;">{in_ram} paginas</div></div>
             </div>
             <div class="swap-box">
                 <strong>Swap en disco</strong>
                 <div class="page-pill-row">{swap_pages if swap_pages else '<span class="page-pill">sin uso</span>'}</div>
+                <div class="resource-bar"><div class="resource-fill" style="width:{swap_percent}%; background:{algorithm_data[algorithm]['color']};">{in_swap} paginas</div></div>
             </div>
         </div>
         <div class="resource-bars">
-            <div class="resource-bar"><div class="resource-fill" style="width:{performance}%; background:#008c5a;">rendimiento estimado {performance}%</div></div>
+            <div class="resource-bar"><div class="resource-fill" style="width:{performance}%; background:{algorithm_data[algorithm]['color']};">rendimiento {performance}%</div></div>
         </div>
         """,
         unsafe_allow_html=True,
-    )
-    pipeline(
-        [
-            ("1. Pedido", "El render solicita una pagina virtual."),
-            ("2. Verificacion", "El SO revisa si esta en RAM."),
-            ("3. Swap", "Si falta espacio, mueve paginas menos urgentes al disco."),
-            ("4. Continuidad", "La terminal sigue funcionando, aunque con costo de rendimiento."),
-        ]
     )
 
 
@@ -2186,8 +2187,7 @@ def sidebar() -> str:
                 "Fase 2 / 3. Paginación",
                 "Fase 2 / 4. MMU",
                 "Fase 3 / 5. Round Robin",
-                "Parte 2 / Contexto de alta demanda",
-                "Parte 2 / Memoria virtual y swapping",
+                "Fase 3 / 6. Memoria virtual",
                 "Parte 2 / Fallos de página",
                 "Parte 2 / FIFO, LRU y Clock",
                 "Parte 2 / Round Robin en servidor",
@@ -2226,9 +2226,7 @@ def main() -> None:
         mmu_view()
     elif section == "Fase 3 / 5. Round Robin":
         round_robin_view()
-    elif section == "Parte 2 / Contexto de alta demanda":
-        part2_context_view()
-    elif section == "Parte 2 / Memoria virtual y swapping":
+    elif section == "Fase 3 / 6. Memoria virtual":
         virtual_memory_view()
     elif section == "Parte 2 / Fallos de página":
         page_faults_view()
