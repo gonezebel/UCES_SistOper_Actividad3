@@ -1867,36 +1867,6 @@ def page_replacement_view() -> None:
     st.markdown(render_page_history_table(history, frame_count), unsafe_allow_html=True)
 
 
-def server_round_robin_view() -> None:
-    phase_header("Parte 2", "Round Robin en el servidor de examenes")
-    context_card(
-        "Procesamiento equitativo",
-        "<b>El servidor atiende peticiones por turnos de quantum fijo.</b>",
-        "Si un alumno envia una respuesta muy pesada, usa un turno y vuelve a la cola; no bloquea a los envios livianos.",
-        "La equidad mejora, aunque un quantum demasiado bajo aumenta cambios de contexto.",
-    )
-    left, right = st.columns(2)
-    with left:
-        quantum = st.slider("Quantum del servidor", 1, 6, 2)
-        a1 = st.slider("Alumno A", 1, 12, 4)
-        a2 = st.slider("Alumno B", 1, 12, 9)
-    with right:
-        a3 = st.slider("Alumno C", 1, 12, 3)
-        a4 = st.slider("Alumno D", 1, 12, 7)
-    processes = [Process("Alumno A", a1), Process("Alumno B", a2), Process("Alumno C", a3), Process("Alumno D", a4)]
-    timeline, completion = rr_schedule(processes, quantum)
-    st.markdown(
-        '<div class="rr-layout">'
-        + rr_results_table(processes, timeline, completion)
-        + '<div class="rr-note-stack">'
-        + mini_card("Cola de peticiones", "Cada alumno recibe tiempo de servidor aunque otros envios sigan incompletos.")
-        + mini_card("Quantum", rr_quantum_reading(quantum))
-        + mini_card("Resultado", "El servidor evita trato injusto y mantiene avance visible para todos.")
-        + "</div></div>",
-        unsafe_allow_html=True,
-    )
-
-
 def synchronization_view() -> None:
     phase_header("Parte 2", "Semaforos y condiciones de carrera")
     use_semaphore = st.toggle("Usar semaforo para el archivo de calificaciones", value=True)
@@ -2202,7 +2172,6 @@ def sidebar() -> str:
                 "Fase 3 / 6. Memoria virtual",
                 "Fase 3 / 7. Reemplazo de páginas",
                 "Fase 4 / 8. Round Robin",
-                "Parte 2 / Round Robin en servidor",
                 "Parte 2 / Semáforos y carrera",
                 "Parte 2 / Cierre integrador",
                 "Conclusión",
@@ -2242,8 +2211,6 @@ def main() -> None:
         page_replacement_view()
     elif section == "Fase 4 / 8. Round Robin":
         round_robin_view()
-    elif section == "Parte 2 / Round Robin en servidor":
-        server_round_robin_view()
     elif section == "Parte 2 / Semáforos y carrera":
         synchronization_view()
     elif section == "Parte 2 / Cierre integrador":
