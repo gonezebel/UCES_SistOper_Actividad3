@@ -1868,30 +1868,40 @@ def page_replacement_view() -> None:
 
 
 def synchronization_view() -> None:
-    phase_header("Parte 2", "Semaforos y condiciones de carrera")
-    use_semaphore = st.toggle("Usar semaforo para el archivo de calificaciones", value=True)
-    students = st.slider("Alumnos escribiendo notas a la vez", 2, 6, 4)
-    requests = "".join(f'<div class="request-node {"hot" if not use_semaphore else ""}">Alumno {i + 1}</div>' for i in range(students))
-    if use_semaphore:
-        result_class = ""
-        result = "Archivo consistente: una escritura entra a la seccion critica y las demas esperan turno."
-        left_title = "Con semaforo"
-        right_title = "Cola ordenada"
-    else:
-        result_class = "conflict-file"
-        result = "Condicion de carrera: dos escrituras pueden pisarse y dejar una nota perdida o inconsistente."
-        left_title = "Sin sincronizacion"
-        right_title = "Escrituras superpuestas"
+    phase_header("Fase 4", "9. Sincronización")
     st.markdown(
-        f"""
+        """
+        <div class="conclusion-main">
+            <strong>Respuesta ejecutiva</strong>
+            Cuando varios alumnos escriben notas al mismo tiempo, el sistema debe proteger el archivo central.
+            Un semáforo o mutex ordena el acceso: no acelera la escritura, pero evita que dos procesos pisen datos
+            y dejen calificaciones perdidas o inconsistentes.
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+    st.markdown(
+        """
         <div class="race-demo">
             <div class="demand-zone">
-                <strong>{left_title}</strong>
-                <div class="terminal-grid">{requests}</div>
+                <strong>Sin sincronización</strong>
+                <div class="terminal-grid">
+                    <div class="request-node hot">Alumno A</div>
+                    <div class="request-node hot">Alumno B</div>
+                    <div class="request-node hot">Alumno C</div>
+                    <div class="request-node hot">Alumno D</div>
+                </div>
+                <div class="critical-file conflict-file">Riesgo: condición de carrera, escritura superpuesta y nota perdida.</div>
             </div>
             <div class="demand-zone">
-                <strong>{right_title}</strong>
-                <div class="critical-file {result_class}">{result}</div>
+                <strong>Con semáforo</strong>
+                <div class="terminal-grid">
+                    <div class="request-node">Alumno A</div>
+                    <div class="request-node">Alumno B</div>
+                    <div class="request-node">Alumno C</div>
+                    <div class="request-node">Alumno D</div>
+                </div>
+                <div class="critical-file">Acceso ordenado: un proceso escribe y los demás esperan turno.</div>
             </div>
         </div>
         """,
@@ -1899,9 +1909,9 @@ def synchronization_view() -> None:
     )
     st.markdown(
         '<div class="part2-grid">'
-        + mini_card("Seccion critica", "Es la zona donde se escribe el archivo compartido de calificaciones.")
-        + mini_card("Semaforo/mutex", "Permite que un solo proceso escriba mientras los demas esperan.")
-        + mini_card("Problema evitado", "La condicion de carrera, donde el resultado depende del orden accidental de ejecucion.")
+        + mini_card("Sección crítica", "Es el tramo donde se modifica el archivo compartido de calificaciones.")
+        + mini_card("Semáforo/mutex", "Permite una escritura por vez y bloquea el recurso hasta liberarlo.")
+        + mini_card("Resultado", "El archivo queda consistente aunque muchos alumnos entreguen simultáneamente.")
         + "</div>",
         unsafe_allow_html=True,
     )
@@ -2172,7 +2182,7 @@ def sidebar() -> str:
                 "Fase 3 / 6. Memoria virtual",
                 "Fase 3 / 7. Reemplazo de páginas",
                 "Fase 4 / 8. Round Robin",
-                "Parte 2 / Semáforos y carrera",
+                "Fase 4 / 9. Sincronización",
                 "Parte 2 / Cierre integrador",
                 "Conclusión",
             ],
@@ -2211,7 +2221,7 @@ def main() -> None:
         page_replacement_view()
     elif section == "Fase 4 / 8. Round Robin":
         round_robin_view()
-    elif section == "Parte 2 / Semáforos y carrera":
+    elif section == "Fase 4 / 9. Sincronización":
         synchronization_view()
     elif section == "Parte 2 / Cierre integrador":
         part2_closure_view()
