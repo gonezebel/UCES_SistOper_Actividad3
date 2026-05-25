@@ -949,6 +949,21 @@ def inject_css() -> None:
             margin-bottom: .65rem;
         }
 
+        .phase-summary-grid [data-testid="stColumn"] > div,
+        .phase-summary-grid .metric-card {
+            height: 100%;
+        }
+
+        .phase-summary-grid .metric-card {
+            min-height: 168px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .phase-summary-grid .metric-card p {
+            flex: 1;
+        }
+
         .part2-grid {
             display: grid;
             grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -1851,7 +1866,7 @@ def synchronization_view() -> None:
     st.markdown(
         """
         <div class="conclusion-main">
-            <strong>Respuesta ejecutiva</strong>
+            <strong>Control de acceso concurrente</strong>
             Cuando varios alumnos escriben notas al mismo tiempo, el sistema debe proteger el archivo central.
             Un semáforo o mutex ordena el acceso: no acelera la escritura, pero evita que dos procesos pisen datos
             y dejen calificaciones perdidas o inconsistentes.
@@ -1886,11 +1901,21 @@ def synchronization_view() -> None:
         """,
         unsafe_allow_html=True,
     )
+    st.markdown('<div class="conclusion-references-title">Mecanismos de control</div>', unsafe_allow_html=True)
     st.markdown(
         '<div class="part2-grid">'
-        + mini_card("Sección crítica", "Es el tramo donde se modifica el archivo compartido de calificaciones.")
-        + mini_card("Semáforo/mutex", "Permite una escritura por vez y bloquea el recurso hasta liberarlo.")
-        + mini_card("Resultado", "El archivo queda consistente aunque muchos alumnos entreguen simultáneamente.")
+        + mini_card("Mutex / semáforo binario", "Valor 0/1. Protege una sección crítica: solo un proceso escribe el archivo a la vez.")
+        + mini_card("Semáforo contador", "Permite hasta N accesos concurrentes. Útil para recursos con cupos, como conexiones o buffers.")
+        + mini_card("Monitor", "Encapsula datos y operaciones críticas; reduce errores al centralizar la sincronización.")
+        + "</div>",
+        unsafe_allow_html=True,
+    )
+    st.markdown('<div class="conclusion-references-title">Riesgos que se evitan</div>', unsafe_allow_html=True)
+    st.markdown(
+        '<div class="part2-grid">'
+        + mini_card("Condición de carrera", "Dos escrituras simultáneas pueden pisarse; la sincronización fuerza un orden.")
+        + mini_card("Interbloqueo", "Un mal orden de bloqueos puede dejar procesos esperando entre sí; se previene con reglas de adquisición y liberación.")
+        + mini_card("Inanición", "Una cola sin política justa puede postergar siempre al mismo proceso; se evita con turnos controlados.")
         + "</div>",
         unsafe_allow_html=True,
     )
@@ -2103,24 +2128,17 @@ def board_view() -> None:
         unsafe_allow_html=True,
     )
 
-    st.markdown('<div class="conclusion-grid">', unsafe_allow_html=True)
-    c1, c2, c3 = st.columns(3)
+    st.markdown('<div class="conclusion-grid phase-summary-grid">', unsafe_allow_html=True)
+    c1, c2, c3, c4 = st.columns(4)
     with c1:
-        card("Fase 1", "Windows + seguridad", "Windows 11 Pro, usuarios estándar y controles nativos reducen cambios no autorizados en el aula.")
+        card("Fase 1", "Base segura", "Selección del sistema, controles nativos y aislamiento de procesos reducen cambios no autorizados y fallas cruzadas.")
     with c2:
-        card("Fase 2", "Procesos + memoria", "Aislamiento, paginación y MMU separan fallas, aprovechan RAM y protegen direcciones de memoria.")
+        card("Fase 2", "Paginación + MMU", "La memoria se organiza en páginas, se aprovechan marcos dispersos y la MMU valida accesos.")
     with c3:
-        card("Fase 3", "CPU equitativa", "Round Robin reparte turnos para que render, examen y servicios críticos sigan avanzando.")
+        card("Fase 3", "Memoria virtual", "Swapping y reemplazo de páginas sostienen renders cuando la RAM física no alcanza.")
+    with c4:
+        card("Fase 4", "CPU + sincronización", "Round Robin reparte CPU y los semáforos protegen el archivo de calificaciones.")
     st.markdown("</div>", unsafe_allow_html=True)
-
-    st.markdown(
-        '<div class="part2-grid">'
-        + mini_card("Memoria virtual", "Swapping evita el colapso inmediato cuando la RAM física no alcanza, con costo de rendimiento.")
-        + mini_card("Reemplazo", "FIFO, LRU y Clock definen qué página sale cuando ocurre un fallo y no hay marcos libres.")
-        + mini_card("Sincronización", "Semáforos o mutex protegen el archivo de calificaciones frente a escrituras simultáneas.")
-        + "</div>",
-        unsafe_allow_html=True,
-    )
 
     st.markdown('<div class="conclusion-references-title">Referencias bibliográficas</div>', unsafe_allow_html=True)
     st.markdown('<div class="apa-list">', unsafe_allow_html=True)
