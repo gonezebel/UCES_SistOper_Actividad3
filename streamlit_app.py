@@ -949,6 +949,13 @@ def inject_css() -> None:
             margin-bottom: .65rem;
         }
 
+        .phase-summary-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: .75rem;
+            align-items: stretch;
+        }
+
         .phase-summary-grid .metric-card {
             height: 190px;
             min-height: 190px;
@@ -1199,6 +1206,7 @@ def inject_css() -> None:
 
         @media (max-width: 900px) {
             .kpi-grid, .icon-strip, .mini-grid, .pipeline, .isolation-layout, .mmu-flow, .mmu-cases, .rr-layout, .part2-grid, .demand-map, .swap-layout, .race-demo {grid-template-columns: 1fr;}
+            .phase-summary-grid {grid-template-columns: 1fr;}
             .memory-grid {grid-template-columns: repeat(4, 1fr);}
             .process-map {grid-template-columns: repeat(2, 1fr);}
             .pipeline:before, .pipeline:after, .mmu-node:not(:last-child)::after {display: none;}
@@ -2124,17 +2132,33 @@ def board_view() -> None:
         unsafe_allow_html=True,
     )
 
-    st.markdown('<div class="conclusion-grid phase-summary-grid">', unsafe_allow_html=True)
-    c1, c2, c3, c4 = st.columns(4)
-    with c1:
-        card("Fase 1", "Base segura", "Selección del sistema, controles nativos y aislamiento de procesos reducen cambios no autorizados y fallas cruzadas.")
-    with c2:
-        card("Fase 2", "Paginación + MMU", "La memoria se organiza en páginas, se aprovechan marcos dispersos y la MMU valida accesos.")
-    with c3:
-        card("Fase 3", "Memoria virtual", "Swapping y reemplazo de páginas sostienen renders cuando la RAM física no alcanza.")
-    with c4:
-        card("Fase 4", "CPU + sincronización", "Round Robin reparte CPU y los semáforos protegen el archivo de calificaciones.")
-    st.markdown("</div>", unsafe_allow_html=True)
+    st.markdown(
+        """
+        <div class="conclusion-grid phase-summary-grid">
+            <div class="metric-card">
+                <strong>Fase 1</strong>
+                <span>Base segura</span>
+                <p>Selección del sistema, controles nativos y aislamiento de procesos reducen cambios no autorizados y fallas cruzadas.</p>
+            </div>
+            <div class="metric-card">
+                <strong>Fase 2</strong>
+                <span>Paginación + MMU</span>
+                <p>La memoria se organiza en páginas, se aprovechan marcos dispersos y la MMU valida accesos.</p>
+            </div>
+            <div class="metric-card">
+                <strong>Fase 3</strong>
+                <span>Memoria virtual</span>
+                <p>Swapping y reemplazo de páginas sostienen renders cuando la RAM física no alcanza.</p>
+            </div>
+            <div class="metric-card">
+                <strong>Fase 4</strong>
+                <span>CPU + sincronización</span>
+                <p>Round Robin reparte CPU y los semáforos protegen el archivo de calificaciones.</p>
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
 
     st.markdown('<div class="conclusion-references-title">Referencias bibliográficas</div>', unsafe_allow_html=True)
     st.markdown('<div class="apa-list">', unsafe_allow_html=True)
