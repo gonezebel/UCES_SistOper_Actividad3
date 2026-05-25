@@ -1164,16 +1164,30 @@ def inject_css() -> None:
         .clock-ring {
             display: grid;
             grid-template-columns: repeat(4, minmax(0, 1fr));
-            gap: .45rem;
-            margin-top: .6rem;
+            gap: .35rem;
+            margin-top: .45rem;
+            margin-bottom: .35rem;
         }
 
         .clock-slot {
             border: 1px solid var(--line);
-            border-radius: 8px;
+            border-radius: 6px;
             background: #fff;
-            padding: .55rem;
+            padding: .32rem .45rem;
+            min-height: 48px;
             text-align: center;
+        }
+
+        .clock-slot b {
+            display: block;
+            font-size: .86rem;
+            line-height: 1.05;
+            margin-bottom: .12rem;
+        }
+
+        .clock-slot small {
+            font-size: .72rem;
+            line-height: 1;
         }
 
         .clock-slot.pointer {
