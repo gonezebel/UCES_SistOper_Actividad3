@@ -949,13 +949,9 @@ def inject_css() -> None:
             margin-bottom: .65rem;
         }
 
-        .phase-summary-grid [data-testid="stColumn"] > div,
         .phase-summary-grid .metric-card {
-            height: 100%;
-        }
-
-        .phase-summary-grid .metric-card {
-            min-height: 168px;
+            height: 190px;
+            min-height: 190px;
             display: flex;
             flex-direction: column;
         }
