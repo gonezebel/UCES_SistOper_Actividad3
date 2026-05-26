@@ -1162,37 +1162,41 @@ def inject_css() -> None:
         }
 
         .clock-ring {
-            display: grid;
-            grid-template-columns: repeat(4, minmax(0, 1fr));
-            gap: .35rem;
-            margin-top: .45rem;
-            margin-bottom: .35rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: .28rem;
+            margin: .34rem 0 .24rem;
+            align-items: center;
         }
 
         .clock-slot {
             border: 1px solid var(--line);
-            border-radius: 6px;
+            border-radius: 999px;
             background: #fff;
-            padding: .32rem .45rem;
-            min-height: 48px;
+            padding: .14rem .52rem;
+            min-height: 0;
             text-align: center;
+            display: inline-flex;
+            align-items: center;
+            gap: .32rem;
+            line-height: 1;
         }
 
         .clock-slot b {
-            display: block;
-            font-size: .86rem;
-            line-height: 1.05;
-            margin-bottom: .12rem;
+            display: inline;
+            font-size: .8rem;
+            line-height: 1;
+            margin: 0;
         }
 
         .clock-slot small {
-            font-size: .72rem;
+            font-size: .68rem;
             line-height: 1;
         }
 
         .clock-slot.pointer {
             border-color: var(--uces-green);
-            box-shadow: inset 0 0 0 2px rgba(0, 140, 90, .18);
+            box-shadow: inset 0 0 0 1px rgba(0, 140, 90, .22);
         }
 
         .race-demo {
@@ -1872,7 +1876,7 @@ def page_replacement_view() -> None:
         bits = last["bits"]
         pointer = last["pointer"]
         slots = "".join(
-            f'<div class="clock-slot {"pointer" if i == pointer else ""}"><b>{frame if frame is not None else "-"}</b><br><small>R={bits.get(frame, 0) if frame is not None else "-"}</small></div>'
+            f'<span class="clock-slot {"pointer" if i == pointer else ""}"><b>{frame if frame is not None else "-"}</b><small>R={bits.get(frame, 0) if frame is not None else "-"}</small></span>'
             for i, frame in enumerate(frames)
         )
         st.markdown(f'<div class="clock-ring">{slots}</div>', unsafe_allow_html=True)
