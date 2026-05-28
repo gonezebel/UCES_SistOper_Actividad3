@@ -1749,7 +1749,7 @@ def render_page_history_table(history: list[dict[str, object]], frame_count: int
 
 
 def virtual_memory_view() -> None:
-    phase_header("Fase 3", "6. Memoria virtual")
+    phase_header("Fase 3", "5. Memoria virtual")
     st.markdown(
         """
         <div class="conclusion-main">
@@ -1835,7 +1835,7 @@ def virtual_memory_view() -> None:
 
 
 def page_replacement_view() -> None:
-    phase_header("Fase 3", "7. Reemplazo de páginas: Simulación")
+    phase_header("Fase 3", "6. Reemplazo de páginas: Simulación")
     st.markdown(
         """
         <div class="conclusion-main">
@@ -1884,7 +1884,7 @@ def page_replacement_view() -> None:
 
 
 def synchronization_view() -> None:
-    phase_header("Fase 4", "9. Sincronización")
+    phase_header("Fase 4", "8. Sincronización")
     st.markdown(
         """
         <div class="conclusion-main">
@@ -2094,7 +2094,7 @@ def mmu_view() -> None:
 def round_robin_view() -> None:
     phase_header(
         "Enfoque de consultoría",
-        "5. Round Robin para clases 3D y exámenes online",
+        "7. Round Robin para clases 3D y exámenes online",
     )
     context_card(
         "Criterio ejecutivo",
@@ -2201,10 +2201,10 @@ def sidebar() -> str:
                 "Fase 1 / 2. Aislamiento de Procesos",
                 "Fase 2 / 3. Paginación",
                 "Fase 2 / 4. MMU",
-                "Fase 3 / 6. Memoria virtual",
-                "Fase 3 / 7. Reemplazo de páginas",
-                "Fase 4 / 8. Round Robin",
-                "Fase 4 / 9. Sincronización",
+                "Fase 3 / 5. Memoria virtual",
+                "Fase 3 / 6. Reemplazo de páginas",
+                "Fase 4 / 7. Round Robin",
+                "Fase 4 / 8. Sincronización",
                 "Conclusión",
             ],
         )
@@ -2236,13 +2236,13 @@ def main() -> None:
         paging_view()
     elif section == "Fase 2 / 4. MMU":
         mmu_view()
-    elif section == "Fase 3 / 6. Memoria virtual":
+    elif section == "Fase 3 / 5. Memoria virtual":
         virtual_memory_view()
-    elif section == "Fase 3 / 7. Reemplazo de páginas":
+    elif section == "Fase 3 / 6. Reemplazo de páginas":
         page_replacement_view()
-    elif section == "Fase 4 / 8. Round Robin":
+    elif section == "Fase 4 / 7. Round Robin":
         round_robin_view()
-    elif section == "Fase 4 / 9. Sincronización":
+    elif section == "Fase 4 / 8. Sincronización":
         synchronization_view()
     else:
         board_view()
